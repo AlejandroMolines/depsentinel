@@ -198,7 +198,7 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
   </div>
 </header>
 <main class="wrap" id="app"></main>
-<input class="sr" type="file" id="file" accept=".json,application/json" tabindex="-1" aria-label="Elegir informe JSON">
+<input class="sr" type="file" id="file" accept=".json,application/json" tabindex="-1" aria-label="Choose JSON report">
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script id="ds-data" type="application/json">null</script>
@@ -208,8 +208,8 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
 
   var REPO = 'https://github.com/AlejandroMolines/depsentinel';
   var SEV = ['critical', 'high', 'medium', 'low'];
-  var SEV_LABEL = { critical: 'Crítico', high: 'Alto', medium: 'Medio', low: 'Bajo' };
-  var SEV_PLURAL = { critical: ['crítico', 'críticos'], high: ['alto', 'altos'], medium: ['medio', 'medios'], low: ['bajo', 'bajos'] };
+  var SEV_LABEL = { critical: 'Critical', high: 'High', medium: 'Medium', low: 'Low' };
+  var SEV_PLURAL = { critical: ['critical', 'critical'], high: ['high', 'high'], medium: ['medium', 'medium'], low: ['low', 'low'] };
   var REC_LABEL = { use: 'Usar', update: 'Actualizar', review: 'Revisar', avoid: 'Evitar' };
   var ECO_LABEL = { npm: 'npm', pypi: 'PyPI', go: 'Go', docker: 'Docker', actions: 'GitHub Actions' };
 
@@ -324,7 +324,7 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     var rep;
     try { rep = JSON.parse(text); } catch (e) { rep = null; }
     if (!validate(rep)) {
-      state.notice = 'Ese fichero no es un informe de DepSentinel. Genera uno con: depsentinel scan --format json --output report.json';
+      state.notice = 'That file is not a DepSentinel report. Generate one with: depsentinel scan --format json --output report.json';
       if (state.rep) render(); else renderEmpty();
       return;
     }
@@ -345,10 +345,10 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     var s = rep.summary.by_severity;
     var parts = [];
     SEV.forEach(function (k) { if (s[k]) parts.push(plural(s[k], SEV_PLURAL[k][0], SEV_PLURAL[k][1])); });
-    if (!parts.length) return 'Sin hallazgos en ' + plural(rep.summary.packages, 'paquete', 'paquetes') + '.';
+    if (!parts.length) return 'No findings in ' + plural(rep.summary.packages, 'package', 'packages') + '.';
     var list = parts.length > 1 ? parts.slice(0, -1).join(', ') + ' y ' + parts[parts.length - 1] : parts[0];
-    var level = { critical: 'crítico', high: 'alto', medium: 'medio', low: 'bajo' }[rep.summary.risk_level] || 'bajo';
-    return 'Riesgo ' + level + ': ' + list + ' entre ' + plural(rep.summary.packages, 'paquete', 'paquetes') + '.';
+    var level = { critical: 'critical', high: 'high', medium: 'medium', low: 'low' }[rep.summary.risk_level] || 'low';
+    return 'Risk ' + level + ': ' + list + ' entre ' + plural(rep.summary.packages, 'package', 'packages') + '.';
   }
 
   function renderBand() {
@@ -363,12 +363,12 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     area.appendChild(h('p', { class: 'verdict', text: verdictText(rep) }));
     var first = rep.findings[0];
     if (first) {
-      area.appendChild(h('p', { class: 'start' }, 'Empieza por ',
+      area.appendChild(h('p', { class: 'start' }, 'Start with ',
         h('button', { type: 'button', onclick: function () { selectFinding(first); } }, pkgLabel(first.package, first.version, first.ecosystem)),
         ': ' + first.title));
     }
     if (total) {
-      var meter = h('div', { class: 'meter', role: 'img', 'aria-label': 'Reparto de hallazgos por severidad' });
+      var meter = h('div', { class: 'meter', role: 'img', 'aria-label': 'Findings by severity' });
       var cls = { critical: 'c-crit', high: 'c-high', medium: 'c-med', low: 'c-low' };
       SEV.forEach(function (k) { if (s[k]) meter.appendChild(h('i', { class: cls[k], style: 'flex:' + s[k] })); });
       area.appendChild(meter);
@@ -381,9 +381,9 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     }
     var facts = [];
     if (rep.ecosystems.length) facts.push(rep.ecosystems.map(function (e) { return ECO_LABEL[e] || e; }).join(', '));
-    facts.push('generado el ' + fmtDate(rep.generated_at));
+    facts.push('generated on ' + fmtDate(rep.generated_at));
     facts.push('DepSentinel ' + rep.version);
-    if (rep.offline) facts.push('sin conexión');
+    if (rep.offline) facts.push('offline');
     area.appendChild(h('p', { class: 'band-facts', text: facts.join(' · ') }));
   }
 
@@ -393,17 +393,17 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     renderBand();
     var app = $('#app'); clear(app);
     var drop = h('div', { class: 'drop', id: 'drop' },
-      h('p', null, 'Arrastra aquí el informe JSON o elígelo en tu equipo.'),
-      h('button', { class: 'btn primary', type: 'button', onclick: function () { $('#file').click(); } }, 'Elegir informe'));
+      h('p', null, 'Drag the JSON report here or pick it from your computer.'),
+      h('button', { class: 'btn primary', type: 'button', onclick: function () { $('#file').click(); } }, 'Choose report'));
     app.appendChild(h('section', { class: 'landing' },
-      h('h1', { text: 'Abre un informe de DepSentinel' }),
-      h('p', null, 'Este panel se ejecuta entero en tu navegador: el informe no sale de tu equipo.'),
+      h('h1', { text: 'Open a DepSentinel report' }),
+      h('p', null, 'This panel runs entirely in your browser: the report never leaves your machine.'),
       state.notice ? h('p', { class: 'notice err', role: 'alert', text: state.notice }) : null,
       drop,
-      h('p', null, 'Para generar un informe:'),
+      h('p', null, 'To generate a report:'),
       h('pre', { text: 'depsentinel scan --format json --output report.json' }),
       h('p', null, ''),
-      h('p', null, 'O usa depsentinel report --html para abrir este panel con el resultado ya cargado.'),
+      h('p', null, 'Or use depsentinel report --html to open this panel with the result already loaded.'),
       renderHistoryList(true)));
   }
 
@@ -422,7 +422,7 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     if (state.notice) app.appendChild(h('p', { class: 'notice err', role: 'alert', text: state.notice }));
     if (rep.incomplete || rep.warnings.length) {
       var box = h('div', { class: 'notice', role: 'status' },
-        h('strong', { text: rep.incomplete ? 'El análisis está incompleto.' : 'Avisos del análisis.' }));
+        h('strong', { text: rep.incomplete ? 'The analysis is incomplete.' : 'Analysis warnings.' }));
       if (rep.warnings.length) {
         var ul = h('ul');
         rep.warnings.slice(0, 8).forEach(function (w) { ul.appendChild(h('li', { text: w })); });
@@ -432,10 +432,10 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     }
     var fpCount = Object.keys(state.fp).length;
     app.appendChild(h('div', { class: 'tabs', role: 'tablist' },
-      tabButton('findings', 'Hallazgos', rep.findings.length),
-      tabButton('packages', 'Paquetes', rep.packages.length),
-      tabButton('fp', 'Falsos positivos', fpCount),
-      tabButton('history', 'Historial')));
+      tabButton('findings', 'Findings', rep.findings.length),
+      tabButton('packages', 'Packages', rep.packages.length),
+      tabButton('fp', 'False positives', fpCount),
+      tabButton('history', 'History')));
 
     var layout = h('div', { class: 'layout' + (state.selected && state.tab !== 'history' ? ' has-detail' : '') });
     var main = h('section', { 'aria-labelledby': 'tab-' + state.tab });
@@ -448,7 +448,7 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     app.appendChild(layout);
   }
 
-  // ---------- Hallazgos ----------
+  // ---------- Findings ----------
   function matches(f) {
     if (!state.sev[f.severity]) return false;
     if (state.eco && f.ecosystem !== state.eco) return false;
@@ -479,14 +479,14 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     });
     var ecos = {}; var rules = {};
     rep.findings.concat(rep.suppressed).forEach(function (f) { ecos[f.ecosystem] = 1; rules[f.rule] = 1; });
-    var selEco = h('select', { class: 'field', 'aria-label': 'Ecosistema', onchange: function (e) { state.eco = e.target.value; repaint(); } },
-      option('', 'Todos los ecosistemas', state.eco === ''),
+    var selEco = h('select', { class: 'field', 'aria-label': 'Ecosystem', onchange: function (e) { state.eco = e.target.value; repaint(); } },
+      option('', 'All ecosystems', state.eco === ''),
       Object.keys(ecos).sort().map(function (e) { return option(e, ECO_LABEL[e] || e, state.eco === e); }));
-    var selRule = h('select', { class: 'field', 'aria-label': 'Regla', onchange: function (e) { state.rule = e.target.value; repaint(); } },
-      option('', 'Todas las reglas', state.rule === ''),
+    var selRule = h('select', { class: 'field', 'aria-label': 'Rule', onchange: function (e) { state.rule = e.target.value; repaint(); } },
+      option('', 'All rules', state.rule === ''),
       Object.keys(rules).sort().map(function (r) { return option(r, r, state.rule === r); }));
     var search = h('input', {
-      class: 'field search', type: 'search', placeholder: 'Buscar paquete, aviso o regla', 'aria-label': 'Buscar', value: state.q,
+      class: 'field search', type: 'search', placeholder: 'Search package, advisory or rule', 'aria-label': 'Search', value: state.q,
       oninput: function (e) { state.q = e.target.value; repaint(); }
     });
     bar.appendChild(selEco); bar.appendChild(selRule); bar.appendChild(search);
@@ -507,8 +507,8 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
         h('div', { class: 'title', text: f.title }),
         h('div', { class: 'sub' }, sub,
           f.fixed_in ? h('span', null, ' · ', h('span', { class: 'fixed', text: 'corregido en ' + f.fixed_in })) : null,
-          allowed && f.allowed ? ' · en lista blanca: ' + f.allowed.reason : null,
-          pk && pk.direct ? ' · dependencia directa' : null))));
+          allowed && f.allowed ? ' · allowlisted: ' + f.allowed.reason : null,
+          pk && pk.direct ? ' · direct dependency' : null))));
   }
 
   function renderFindings(main) {
@@ -519,14 +519,14 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
       var items = rep.findings.filter(function (f) { return matches(f) && !state.fp[fkey(f)]; });
       var hidden = rep.findings.filter(function (f) { return state.fp[fkey(f)]; }).length;
       clear(listBox);
-      countEl.textContent = 'Mostrando ' + nf.format(items.length) + ' de ' + nf.format(rep.findings.length) + ' hallazgos' +
-        (hidden ? ' (' + nf.format(hidden) + ' marcados como falso positivo)' : '');
+      countEl.textContent = 'Showing ' + nf.format(items.length) + ' of ' + nf.format(rep.findings.length) + ' findings' +
+        (hidden ? ' (' + nf.format(hidden) + ' marked as false positive)' : '');
       if (!rep.findings.length) {
         listBox.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' },
-          h('strong', { text: 'Sin hallazgos' }), 'Todas las dependencias pasan las reglas activas.')));
+          h('strong', { text: 'No findings' }), 'All dependencies pass the active rules.')));
       } else if (!items.length) {
         listBox.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' },
-          h('strong', { text: 'Ningún hallazgo coincide' }), 'Activa más severidades o borra la búsqueda.')));
+          h('strong', { text: 'No finding matches' }), 'Enable more severities or clear the search.')));
       } else {
         var ul = h('ul', { class: 'list' });
         items.forEach(function (f) { ul.appendChild(findingRow(f)); });
@@ -550,15 +550,15 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     paint();
   }
 
-  // ---------- Paquetes ----------
+  // ---------- Packages ----------
   function renderPackages(main) {
     var rep = state.rep;
     var only = h('button', {
       class: 'chip', type: 'button', 'aria-pressed': state.pkgOnlyIssues ? 'true' : 'false',
       onclick: function () { state.pkgOnlyIssues = !state.pkgOnlyIssues; render(); }
-    }, 'Solo con hallazgos');
+    }, 'Only with findings');
     var search = h('input', {
-      class: 'field search', type: 'search', placeholder: 'Buscar paquete', 'aria-label': 'Buscar paquete', value: state.q,
+      class: 'field search', type: 'search', placeholder: 'Search package', 'aria-label': 'Search package', value: state.q,
       oninput: function (e) { state.q = e.target.value; paint(); }
     });
     main.appendChild(h('div', { class: 'toolbar' }, only, search));
@@ -572,18 +572,18 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
         return !state.q || (p.name + ' ' + p.version).toLowerCase().indexOf(state.q.toLowerCase()) >= 0;
       });
       var shown = items.slice(0, 300);
-      countEl.textContent = 'Mostrando ' + nf.format(shown.length) + ' de ' + nf.format(items.length) + ' paquetes' +
-        (items.length > shown.length ? ' (afina la búsqueda para ver el resto)' : '');
+      countEl.textContent = 'Showing ' + nf.format(shown.length) + ' of ' + nf.format(items.length) + ' packages' +
+        (items.length > shown.length ? ' (refine the search to see the rest)' : '');
       if (!shown.length) {
-        box.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' }, h('strong', { text: 'Nada que mostrar' }),
-          state.pkgOnlyIssues ? 'Ningún paquete tiene hallazgos. Quita «Solo con hallazgos» para ver todos.' : 'La búsqueda no coincide con ningún paquete.')));
+        box.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' }, h('strong', { text: 'Nothing to show' }),
+          state.pkgOnlyIssues ? 'No package has findings. Uncheck “Only with findings” to see all.' : 'No package matches the search.')));
         return;
       }
       var ul = h('ul', { class: 'list' });
       shown.forEach(function (p) {
         var sel = state.selected && state.selected.key === pkey(p.ecosystem, p.name, p.version);
-        var sub = (ECO_LABEL[p.ecosystem] || p.ecosystem) + (p.direct ? ' · directa' : ' · transitiva') + (p.dev ? ' · desarrollo' : '') +
-          (p.findings ? ' · ' + plural(p.findings, 'hallazgo', 'hallazgos') : '');
+        var sub = (ECO_LABEL[p.ecosystem] || p.ecosystem) + (p.direct ? ' · direct' : ' · transitive') + (p.dev ? ' · dev' : '') +
+          (p.findings ? ' · ' + plural(p.findings, 'finding', 'findings') : '');
         ul.appendChild(h('li', null, h('button', {
           class: 'row pkg', type: 'button', 'aria-current': sel ? 'true' : 'false',
           onclick: function () { selectPackage(p.ecosystem, p.name, p.version); }
@@ -592,7 +592,7 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
           h('span', null,
             h('span', { class: 'head' }, p.name, p.version ? h('span', { class: 'ver', text: ' ' + p.version }) : null),
             h('div', { class: 'sub', text: sub })),
-          h('span', null, h('span', { class: 'sub', text: 'Riesgo ' + p.risk_score + ' de 100' }),
+          h('span', null, h('span', { class: 'sub', text: 'Risk ' + p.risk_score + ' de 100' }),
             h('div', { class: 'mini s-' + p.risk_level }, h('i', { style: 'width:' + Math.max(p.risk_score, 3) + '%' }))))));
       });
       box.appendChild(ul);
@@ -600,7 +600,7 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     paint();
   }
 
-  // ---------- Falsos positivos ----------
+  // ---------- False positives ----------
   function saveFP() { store.set('ds:fp:' + state.rep.target, state.fp); }
 
   function shq(s) { return /^[A-Za-z0-9@._\/:+-]+$/.test(s) ? s : "'" + s.replace(/'/g, "'\\''") + "'"; }
@@ -608,14 +608,14 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
   function allowCommand(f) {
     var args = ['depsentinel allowlist add', shq(f.package + (f.version ? '@' + f.version : '')), '--ecosystem', f.ecosystem];
     if (f.rule) args.push('--rule', f.rule);
-    args.push('--reason', '"describe por qué es seguro"');
+    args.push('--reason', '"describe why it is safe"');
     return args.join(' ');
   }
 
   function issueUrl(f) {
     var q = [
-      ['template', 'falso-positivo.yml'],
-      ['title', 'Falso positivo: ' + f.rule + ' en ' + f.package],
+      ['template', 'false-positive.yml'],
+      ['title', 'False positive: ' + f.rule + ' en ' + f.package],
       ['ecosystem', f.ecosystem], ['package', f.package + (f.version ? '@' + f.version : '')], ['rule', f.rule]
     ].map(function (kv) { return encodeURIComponent(kv[0]) + '=' + encodeURIComponent(kv[1]); }).join('&');
     return REPO + '/issues/new?' + q;
@@ -625,16 +625,16 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     var rep = state.rep;
     var flagged = rep.findings.filter(function (f) { return state.fp[fkey(f)]; });
     main.appendChild(h('p', { class: 'count' },
-      'Aquí van los hallazgos que has marcado como falso positivo. La marca solo existe en este navegador: para que el CI los ignore hay que añadirlos a la lista blanca con una justificación.'));
+      'Here are the findings you marked as false positive. The mark only exists in this browser: to make CI ignore them, add them to the allowlist with a justification.'));
     if (!flagged.length) {
-      main.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' }, h('strong', { text: 'Todavía no has marcado ninguno' }),
-        'Abre un hallazgo y pulsa «Marcar como falso positivo».')));
+      main.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' }, h('strong', { text: 'You haven't marked any yet' }),
+        'Open a finding and click “Mark as false positive”.')));
       return;
     }
     var script = flagged.map(allowCommand).join('\n');
     main.appendChild(h('div', { class: 'toolbar' },
       h('button', { class: 'btn primary', type: 'button', onclick: function () { copy(script, 'Comandos copiados'); } }, 'Copiar comandos de la lista blanca'),
-      h('button', { class: 'btn', type: 'button', onclick: function () { flagged.forEach(function (f) { delete state.fp[fkey(f)]; }); saveFP(); render(); } }, 'Quitar todas las marcas')));
+      h('button', { class: 'btn', type: 'button', onclick: function () { flagged.forEach(function (f) { delete state.fp[fkey(f)]; }); saveFP(); render(); } }, 'Unmark all')));
     var ul = h('ul', { class: 'list' });
     flagged.forEach(function (f) { ul.appendChild(findingRow(f)); });
     main.appendChild(ul);
@@ -660,20 +660,20 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     var m = p.meta || {};
     var rows = [];
     function add(k, v) { if (v) rows.push([k, v]); }
-    add('Ecosistema', ECO_LABEL[p.ecosystem] || p.ecosystem);
-    add('Tipo', (p.direct ? 'Dependencia directa' : 'Dependencia transitiva') + (p.dev ? ' (solo desarrollo)' : ''));
+    add('Ecosystem', ECO_LABEL[p.ecosystem] || p.ecosystem);
+    add('Type', (p.direct ? 'Direct dependency' : 'Transitive dependency') + (p.dev ? ' (dev only)' : ''));
     add('Declarada en', p.source);
-    add('Última versión', m.latest);
-    add('Esta versión se publicó', fmtDate(m.published, true));
-    add('Último lanzamiento', fmtDate(m.last_release, true));
-    add('Publicó esta versión', m.publisher);
-    if (m.previous_publisher) add('Publicó la anterior (' + (m.previous_version || '') + ')', m.previous_publisher);
+    add('Latest version', m.latest);
+    add('This version was published', fmtDate(m.published, true));
+    add('Latest release', fmtDate(m.last_release, true));
+    add('Published this version', m.publisher);
+    if (m.previous_publisher) add('Published the previous (' + (m.previous_version || '') + ')', m.previous_publisher);
     if (m.maintainers && m.maintainers.length) add('Mantenedores', m.maintainers.join(', '));
     if (m.new_maintainers && m.new_maintainers.length) add('Mantenedores nuevos', m.new_maintainers.join(', '));
     add('Licencia', m.license);
     if (m.deprecated) add('Deprecado', m.deprecated);
     if (m.yanked) add('Retirada (yanked)', m.yanked_reason || 'sí');
-    if (m.sdist_only) add('Distribución', 'Solo código fuente: ejecuta código de compilación al instalar');
+    if (m.sdist_only) add('Distribution', 'Source only: runs build code on install');
     return rows;
   }
 
@@ -683,10 +683,10 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     var same = function (f) { return pkey(f.ecosystem, f.package, f.version) === sel.key; };
     var fs = rep.findings.filter(same);
     var allowed = rep.suppressed.filter(same);
-    var det = h('aside', { class: 'detail', 'aria-label': 'Detalle del paquete' });
+    var det = h('aside', { class: 'detail', 'aria-label': 'Package detail' });
     det.appendChild(h('button', { class: 'btn close', type: 'button', onclick: function () { state.selected = null; render(); } }, 'Cerrar'));
     det.appendChild(h('h2', null, p.name, p.version ? h('span', { class: 'ver', text: ' ' + p.version }) : null));
-    det.appendChild(h('p', { class: 'kind', text: (ECO_LABEL[p.ecosystem] || p.ecosystem) + (p.direct ? ' · dependencia directa' : '') }));
+    det.appendChild(h('p', { class: 'kind', text: (ECO_LABEL[p.ecosystem] || p.ecosystem) + (p.direct ? ' · direct dependency' : '') }));
 
     var level = p.findings ? p.risk_level : 'low';
     det.appendChild(h('div', { class: 'verdict-box' },
@@ -695,13 +695,13 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
         h('span', { class: 'badge rec-' + p.recommendation, text: REC_LABEL[p.recommendation] || p.recommendation }),
         h('div', { class: 'mini s-' + level }, h('i', { style: 'width:' + Math.max(p.risk_score, 3) + '%' })))));
 
-    det.appendChild(h('h3', { text: fs.length ? plural(fs.length, 'hallazgo', 'hallazgos') : 'Sin hallazgos' }));
-    if (!fs.length) det.appendChild(h('p', { text: 'Este paquete no incumple ninguna regla activa.' }));
+    det.appendChild(h('h3', { text: fs.length ? plural(fs.length, 'finding', 'findings') : 'No findings' }));
+    if (!fs.length) det.appendChild(h('p', { text: 'This package does not violate any active rule.' }));
     fs.forEach(function (f) { det.appendChild(findingBlock(f)); });
 
     var m = p.meta || {};
     if (m.install_scripts && Object.keys(m.install_scripts).length) {
-      det.appendChild(h('h3', { text: 'Scripts de instalación' }));
+      det.appendChild(h('h3', { text: 'Install scripts' }));
       det.appendChild(h('pre', { text: Object.keys(m.install_scripts).map(function (k) { return k + ': ' + m.install_scripts[k]; }).join('\n') }));
     }
     if (m.script_hits && m.script_hits.length) {
@@ -710,7 +710,7 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
       m.script_hits.forEach(function (x) { ul.appendChild(h('li', { text: (SEV_LABEL[x.severity] || x.severity) + ': ' + x.why + (x.file ? ' (' + x.file + ')' : '') })); });
       det.appendChild(ul);
     }
-    det.appendChild(h('h3', { text: 'Datos del paquete' }));
+    det.appendChild(h('h3', { text: 'Package data' }));
     var dl = h('dl', { class: 'meta' });
     metaRows(p).forEach(function (r) { dl.appendChild(h('dt', { text: r[0] })); dl.appendChild(h('dd', { text: r[1] })); });
     det.appendChild(dl);
@@ -734,7 +734,7 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     var ids = f.rule + (f.id && f.id !== f.rule ? ' · ' + f.id : '') + ((f.aliases && f.aliases.length) ? ' · ' + f.aliases.slice(0, 4).join(', ') : '');
     blk.appendChild(h('div', { class: 'ids', text: ids }));
     if (f.detail) blk.appendChild(h('p', { text: f.detail }));
-    if (f.fix) blk.appendChild(h('p', { class: 'what' }, h('strong', { text: 'Qué hacer: ' }), f.fix));
+    if (f.fix) blk.appendChild(h('p', { class: 'what' }, h('strong', { text: 'What to do: ' }), f.fix));
     var refs = (f.references || []).map(safeUrl).filter(Boolean);
     if (refs.length) {
       var ul = h('ul');
@@ -748,9 +748,9 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
         class: 'btn', type: 'button', 'aria-pressed': flagged ? 'true' : 'false',
         onclick: function () {
           if (flagged) delete state.fp[fkey(f)]; else state.fp[fkey(f)] = 1;
-          saveFP(); toast(flagged ? 'Marca quitada' : 'Marcado como falso positivo (solo en este navegador)'); render();
+          saveFP(); toast(flagged ? 'Marca quitada' : 'Marked as false positive (this browser only)'); render();
         }
-      }, flagged ? 'Quitar marca de falso positivo' : 'Marcar como falso positivo'),
+      }, flagged ? 'Unmark false positive' : 'Mark as false positive'),
       h('a', { class: 'btn', href: issueUrl(f), target: '_blank', rel: 'noopener noreferrer', style: 'text-decoration:none' }, 'Avisar al proyecto')));
     return blk;
   }
@@ -760,13 +760,13 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     var list = store.get('ds:history', []);
     var wrap = h('div');
     if (!list.length) {
-      if (!compact) wrap.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' }, h('strong', { text: 'Todavía no hay historial' }),
-        'Cada informe que abres aquí se guarda en este navegador (solo un resumen) para comparar la evolución.')));
+      if (!compact) wrap.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' }, h('strong', { text: 'No history yet' }),
+        'Each report you open here is saved in this browser (summary only) to compare evolution.')));
       return wrap;
     }
     var byTarget = {}; var order = [];
     list.forEach(function (e) { if (!byTarget[e.target]) { byTarget[e.target] = []; order.push(e.target); } byTarget[e.target].push(e); });
-    wrap.appendChild(h('p', { class: compact ? 'group-title' : 'count', text: compact ? 'Proyectos que has abierto' : 'Proyectos escaneados. Se guarda solo un resumen de cada informe, en este navegador.' }));
+    wrap.appendChild(h('p', { class: compact ? 'group-title' : 'count', text: compact ? 'Proyectos que has abierto' : 'Scanned projects. Only a summary of each report is stored in this browser.' }));
     var ul = h('ul', { class: 'list' });
     order.forEach(function (t) {
       var runs = byTarget[t]; var last = runs[0], prev = runs[1];
@@ -776,22 +776,22 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
       if (prev) {
         var ps = prev.sev || {};
         var d = (s.critical || 0) + (s.high || 0) - (ps.critical || 0) - (ps.high || 0);
-        delta = d === 0 ? ' Sin cambios en críticos y altos desde ' + fmtDate(prev.at, true) + '.' :
-          (d > 0 ? ' ' + plural(d, 'crítico o alto más', 'críticos o altos más') : ' ' + plural(-d, 'crítico o alto menos', 'críticos o altos menos')) + ' desde ' + fmtDate(prev.at, true) + '.';
+        delta = d === 0 ? ' No changes in critical/high since ' + fmtDate(prev.at, true) + '.' :
+          (d > 0 ? ' ' + plural(d, 'critical or high more', 'critical or high more') : ' ' + plural(-d, 'critical or high fewer', 'critical or high fewer')) + ' desde ' + fmtDate(prev.at, true) + '.';
       }
       var isCurrent = state.rep && state.rep.target === t;
-      var summary = SEV.filter(function (k) { return s[k]; }).map(function (k) { return plural(s[k], SEV_PLURAL[k][0], SEV_PLURAL[k][1]); }).join(', ') || 'Sin hallazgos';
+      var summary = SEV.filter(function (k) { return s[k]; }).map(function (k) { return plural(s[k], SEV_PLURAL[k][0], SEV_PLURAL[k][1]); }).join(', ') || 'No findings';
       ul.appendChild(h('li', null, h('div', { class: 'row' },
         h('span', { class: 'badge s-' + (any ? last.level : 'none'), text: any ? SEV_LABEL[last.level] : 'Limpio' }),
         h('span', null,
           h('span', { class: 'head', text: t }),
           h('div', { class: 'title', text: summary }),
-          h('div', { class: 'sub', text: fmtDate(last.at) + ' · ' + plural(last.packages, 'paquete', 'paquetes') + (isCurrent ? ' · informe abierto' : '') + delta })))));
+          h('div', { class: 'sub', text: fmtDate(last.at) + ' · ' + plural(last.packages, 'package', 'packages') + (isCurrent ? ' · report open' : '') + delta })))));
     });
     wrap.appendChild(ul);
     if (!compact) {
       wrap.appendChild(h('div', { class: 'toolbar', style: 'margin-top:12px' },
-        h('button', { class: 'btn', type: 'button', onclick: function () { store.set('ds:history', []); render(); toast('Historial borrado'); } }, 'Borrar historial')));
+        h('button', { class: 'btn', type: 'button', onclick: function () { store.set('ds:history', []); render(); toast('History cleared'); } }, 'Clear history')));
     }
     return wrap;
   }
