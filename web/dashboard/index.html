@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="color-scheme" content="light dark">
-<title>Informe de DepSentinel</title>
+<title>DepSentinel report</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231F3DDB'/%3E%3Cpath d='M16 12 9 20M16 12l7 8' stroke='%23fff' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='9' r='3.2' fill='%23fff'/%3E%3Ccircle cx='9' cy='23' r='3.2' fill='%23fff'/%3E%3Ccircle cx='23' cy='23' r='3.2' fill='%23FF6B1A'/%3E%3C/svg%3E">
 <style>
 :root {
@@ -191,7 +191,7 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
       </div>
       <div class="band-target" id="target"></div>
       <div class="band-actions">
-        <button class="btn on-band" id="btn-import" type="button">Abrir otro informe</button>
+        <button class="btn on-band" id="btn-import" type="button">Open another report</button>
       </div>
     </div>
     <div id="verdict-area"></div>
@@ -627,7 +627,7 @@ pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper
     main.appendChild(h('p', { class: 'count' },
       'Here are the findings you marked as false positive. The mark only exists in this browser: to make CI ignore them, add them to the allowlist with a justification.'));
     if (!flagged.length) {
-      main.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' }, h('strong', { text: 'You haven't marked any yet' }),
+      main.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' }, h('strong', { text: "You haven't marked any yet" }),
         'Open a finding and click “Mark as false positive”.')));
       return;
     }
