@@ -31,6 +31,7 @@ depsentinel scan                      # escanea el directorio actual
 depsentinel scan --ecosystem npm --lock package-lock.json
 depsentinel scan --format json --output report.json
 depsentinel scan --ci --fail-on high  # falla (código 1) si hay riesgo alto o crítico
+depsentinel guard npm install        # lockfile sin scripts → escanea → instala
 depsentinel audit --only high,critical
 depsentinel fix --dry-run             # propone arreglos; sin --dry-run los aplica
 depsentinel allowlist add lodash --reason "revisado manualmente"

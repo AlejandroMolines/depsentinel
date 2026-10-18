@@ -56,6 +56,7 @@ Comandos:
   sbom        Genera un SBOM CycloneDX
   report      Genera el panel HTML (--html) de un escaneo o de un informe JSON
   db          Base de datos local: update, status, clean
+  guard       Intercepta una instalación (npm/yarn/pnpm): genera el lockfile sin scripts, escanea y solo entonces instala
   version     Muestra la versión
 
 Ejemplos:
@@ -109,6 +110,8 @@ func (a *App) Run(ctx context.Context, args []string) int {
 		err = a.cmdReport(ctx, rest)
 	case "db":
 		err = a.cmdDB(ctx, rest)
+	case "guard":
+		err = a.cmdGuard(ctx, rest)
 	default:
 		fmt.Fprintf(a.Stderr, "Comando desconocido: %q\n\n", cmd)
 		fmt.Fprintf(a.Stderr, rootHelp, version.Version)
