@@ -6,6 +6,7 @@ import (
 	"math"
 	"net/http"
 	"net/http/httptest"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -109,7 +110,7 @@ func TestGroupAliases(t *testing.T) {
 }
 
 func TestQueryBatchAndCache(t *testing.T) {
-	calls := 0
+	var calls atomic.Int32
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/v1/querybatch":
@@ -140,7 +141,7 @@ func TestQueryBatchAndCache(t *testing.T) {
 			}
 			_ = json.NewEncoder(w).Encode(out)
 		case "/v1/vulns/GHSA-1", "/v1/vulns/GHSA-2":
-			calls++
+			calls.Add(1)
 			_ = json.NewEncoder(w).Encode(Vuln{ID: r.URL.Path[len("/v1/vulns/"):], Summary: "x", Modified: "2024-01-01T00:00:00Z"})
 		default:
 			http.NotFound(w, r)
@@ -161,7 +162,7 @@ func TestQueryBatchAndCache(t *testing.T) {
 			t.Fatalf("FetchVulns: %v %d %v", got, failed, err)
 		}
 	}
-	if calls != 2 {
-		t.Errorf("la segunda pasada debe salir de la caché: %d llamadas", calls)
+	if calls.Load() != 2 {
+		t.Errorf("la segunda pasada debe salir de la caché: %d llamadas", calls.Load())
 	}
 }

