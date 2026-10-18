@@ -1,0 +1,20 @@
+# binarios y artefactos de compilación
+/depsentinel
+/dbtool
+dist/
+coverage.out
+
+# secretos: NUNCA subas la clave privada del feed
+*.key
+depsentinel-feed.key
+
+# resultados locales
+depsentinel-report.html
+report.json
+sbom.json
+depsentinel-tiktok.mp4
+
+# IDEs y sistema
+.idea/
+.vscode/
+.DS_Store

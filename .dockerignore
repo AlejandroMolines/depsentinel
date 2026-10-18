@@ -1,0 +1,7 @@
+.git
+dist
+*.key
+depsentinel
+depsentinel-report.html
+report.json
+sbom.json

@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Format, vet, tests and feed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache: true
+      - name: Format check
+        run: test -z "$(gofmt -l .)" || { echo "Unformatted files:"; gofmt -l .; exit 1; }
+      - name: Vet
+        run: go vet ./...
+      - name: Tests (race)
+        run: go test -race -count=1 ./...
+      - name: Feed validation
+        run: go run ./cmd/dbtool check -dir db
+      - name: Shell syntax (entrypoint)
+        run: bash -n action/entrypoint.sh
+      - name: Build
+        run: CGO_ENABLED=0 go build -trimpath -o depsentinel ./cmd/depsentinel
+      - name: Self-scan (offline)
+        run: ./depsentinel scan . --offline --ci --fail-on high

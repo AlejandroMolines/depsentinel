@@ -1,0 +1,348 @@
+{
+  "schema": 1,
+  "updated": "2026-10-11",
+  "description": "Semilla mínima de paquetes comprometidos o maliciosos, verificable a mano. La fuente principal en cada escaneo es OSV (avisos MAL-*); esta lista permite detectar los casos más conocidos sin conexión y se amplía con `depsentinel db update`.",
+  "entries": [
+    {
+      "id": "DS-0001",
+      "ecosystem": "npm",
+      "name": "event-stream",
+      "versions": [
+        "3.3.6"
+      ],
+      "kind": "compromised",
+      "summary": "event-stream 3.3.6 incluía la dependencia maliciosa flatmap-stream, que robaba claves de monederos de criptomonedas (nov. 2018)",
+      "reference": "https://github.com/dominictarr/event-stream/issues/116"
+    },
+    {
+      "id": "DS-0002",
+      "ecosystem": "npm",
+      "name": "flatmap-stream",
+      "versions": [
+        "0.1.1"
+      ],
+      "kind": "malware",
+      "summary": "flatmap-stream 0.1.1 contenía el código malicioso inyectado en event-stream (nov. 2018)",
+      "reference": "https://github.com/dominictarr/event-stream/issues/116"
+    },
+    {
+      "id": "DS-0003",
+      "ecosystem": "npm",
+      "name": "crossenv",
+      "versions": [
+        "*"
+      ],
+      "kind": "malware",
+      "summary": "Typosquatting de cross-env que robaba variables de entorno (ago. 2017)",
+      "reference": "https://blog.npmjs.org/post/163723642530/crossenv-malware-on-the-npm-registry"
+    },
+    {
+      "id": "DS-0004",
+      "ecosystem": "npm",
+      "name": "ua-parser-js",
+      "versions": [
+        "0.7.29",
+        "0.8.0",
+        "1.0.0"
+      ],
+      "kind": "compromised",
+      "summary": "Versiones publicadas tras secuestrar la cuenta del autor; instalaban un minero y un ladrón de contraseñas (oct. 2021)",
+      "reference": "https://github.com/advisories/GHSA-pjwm-rvh2-c87w"
+    },
+    {
+      "id": "DS-0005",
+      "ecosystem": "npm",
+      "name": "coa",
+      "versions": [
+        "2.0.3",
+        "2.0.4",
+        "2.1.1",
+        "2.1.3",
+        "3.0.1",
+        "3.1.3"
+      ],
+      "kind": "compromised",
+      "summary": "Versiones con malware publicadas tras un secuestro de cuenta (nov. 2021)",
+      "reference": "https://github.com/advisories/GHSA-73qr-pfmq-6rp8"
+    },
+    {
+      "id": "DS-0006",
+      "ecosystem": "npm",
+      "name": "rc",
+      "versions": [
+        "1.2.9",
+        "1.3.9",
+        "2.3.9"
+      ],
+      "kind": "compromised",
+      "summary": "Versiones con malware publicadas tras un secuestro de cuenta (nov. 2021)",
+      "reference": "https://github.com/advisories/GHSA-g2q5-5433-rhrf"
+    },
+    {
+      "id": "DS-0007",
+      "ecosystem": "npm",
+      "name": "colors",
+      "versions": [
+        "1.4.1",
+        "1.4.2"
+      ],
+      "kind": "sabotage",
+      "summary": "El propio autor introdujo un bucle infinito deliberadamente (ene. 2022)",
+      "reference": "https://osv.dev/list?q=colors&ecosystem=npm"
+    },
+    {
+      "id": "DS-0008",
+      "ecosystem": "npm",
+      "name": "faker",
+      "versions": [
+        "6.6.6"
+      ],
+      "kind": "sabotage",
+      "summary": "El propio autor sustituyó el contenido del paquete (ene. 2022)",
+      "reference": "https://osv.dev/list?q=faker&ecosystem=npm"
+    },
+    {
+      "id": "DS-0009",
+      "ecosystem": "npm",
+      "name": "node-ipc",
+      "versions": [
+        "10.1.1",
+        "10.1.2"
+      ],
+      "kind": "protestware",
+      "summary": "Código que borraba ficheros según la geolocalización de la IP (mar. 2022)",
+      "reference": "https://osv.dev/list?q=node-ipc&ecosystem=npm"
+    },
+    {
+      "id": "DS-0010",
+      "ecosystem": "npm",
+      "name": "chalk",
+      "versions": [
+        "5.6.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=chalk&ecosystem=npm"
+    },
+    {
+      "id": "DS-0011",
+      "ecosystem": "npm",
+      "name": "debug",
+      "versions": [
+        "4.4.2"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=debug&ecosystem=npm"
+    },
+    {
+      "id": "DS-0012",
+      "ecosystem": "npm",
+      "name": "ansi-styles",
+      "versions": [
+        "6.2.2"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=ansi-styles&ecosystem=npm"
+    },
+    {
+      "id": "DS-0013",
+      "ecosystem": "npm",
+      "name": "strip-ansi",
+      "versions": [
+        "7.1.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=strip-ansi&ecosystem=npm"
+    },
+    {
+      "id": "DS-0014",
+      "ecosystem": "npm",
+      "name": "ansi-regex",
+      "versions": [
+        "6.2.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=ansi-regex&ecosystem=npm"
+    },
+    {
+      "id": "DS-0015",
+      "ecosystem": "npm",
+      "name": "supports-color",
+      "versions": [
+        "10.2.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=supports-color&ecosystem=npm"
+    },
+    {
+      "id": "DS-0016",
+      "ecosystem": "npm",
+      "name": "wrap-ansi",
+      "versions": [
+        "9.0.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=wrap-ansi&ecosystem=npm"
+    },
+    {
+      "id": "DS-0017",
+      "ecosystem": "npm",
+      "name": "color-convert",
+      "versions": [
+        "3.1.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=color-convert&ecosystem=npm"
+    },
+    {
+      "id": "DS-0018",
+      "ecosystem": "npm",
+      "name": "color-name",
+      "versions": [
+        "2.0.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=color-name&ecosystem=npm"
+    },
+    {
+      "id": "DS-0019",
+      "ecosystem": "npm",
+      "name": "color-string",
+      "versions": [
+        "2.1.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=color-string&ecosystem=npm"
+    },
+    {
+      "id": "DS-0020",
+      "ecosystem": "npm",
+      "name": "color",
+      "versions": [
+        "5.0.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=color&ecosystem=npm"
+    },
+    {
+      "id": "DS-0021",
+      "ecosystem": "npm",
+      "name": "error-ex",
+      "versions": [
+        "1.3.3"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=error-ex&ecosystem=npm"
+    },
+    {
+      "id": "DS-0022",
+      "ecosystem": "npm",
+      "name": "has-ansi",
+      "versions": [
+        "6.0.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=has-ansi&ecosystem=npm"
+    },
+    {
+      "id": "DS-0023",
+      "ecosystem": "npm",
+      "name": "is-arrayish",
+      "versions": [
+        "0.3.3"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=is-arrayish&ecosystem=npm"
+    },
+    {
+      "id": "DS-0024",
+      "ecosystem": "npm",
+      "name": "simple-swizzle",
+      "versions": [
+        "0.2.3"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=simple-swizzle&ecosystem=npm"
+    },
+    {
+      "id": "DS-0025",
+      "ecosystem": "npm",
+      "name": "slice-ansi",
+      "versions": [
+        "7.1.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=slice-ansi&ecosystem=npm"
+    },
+    {
+      "id": "DS-0026",
+      "ecosystem": "npm",
+      "name": "supports-hyperlinks",
+      "versions": [
+        "4.1.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=supports-hyperlinks&ecosystem=npm"
+    },
+    {
+      "id": "DS-0027",
+      "ecosystem": "npm",
+      "name": "chalk-template",
+      "versions": [
+        "1.1.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=chalk-template&ecosystem=npm"
+    },
+    {
+      "id": "DS-0028",
+      "ecosystem": "npm",
+      "name": "backslash",
+      "versions": [
+        "0.2.1"
+      ],
+      "kind": "compromised",
+      "summary": "Versión publicada tras el compromiso de la cuenta de un mantenedor; inyectaba código que desviaba transacciones de criptomonedas en el navegador (sept. 2025)",
+      "reference": "https://osv.dev/list?q=backslash&ecosystem=npm"
+    },
+    {
+      "id": "DS-0029",
+      "ecosystem": "pypi",
+      "name": "python3-dateutil",
+      "versions": [
+        "*"
+      ],
+      "kind": "malware",
+      "summary": "Typosquatting de python-dateutil que robaba claves SSH/GPG (dic. 2019)",
+      "reference": "https://osv.dev/list?q=python3-dateutil&ecosystem=PyPI"
+    },
+    {
+      "id": "DS-0030",
+      "ecosystem": "pypi",
+      "name": "jeilyfish",
+      "versions": [
+        "*"
+      ],
+      "kind": "malware",
+      "summary": "Typosquatting de jellyfish (con una «I» mayúscula en lugar de «l») que robaba claves SSH/GPG (dic. 2019)",
+      "reference": "https://osv.dev/list?q=jeilyfish&ecosystem=PyPI"
+    }
+  ]
+}

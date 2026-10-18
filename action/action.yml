@@ -1,0 +1,96 @@
+name: DepSentinel
+description: Escanea dependencias (npm, PyPI, Go, Docker y GitHub Actions) y falla el build si hay riesgo alto. / Scans dependencies (npm, PyPI, Go, Docker and GitHub Actions) and fails the build on high risk.
+author: DepSentinel contributors
+branding:
+  icon: shield
+  color: blue
+
+inputs:
+  path:
+    description: Directorio a escanear.
+    default: "."
+  fail-on:
+    description: "Severidad mínima que hace fallar el check: low, medium, high, critical o none."
+    default: "high"
+  ecosystem:
+    description: "Ecosistemas a analizar: auto o una lista (npm,pypi,go,docker,actions)."
+    default: "auto"
+  deep:
+    description: Descarga e inspecciona los paquetes npm con scripts de instalación (más lento).
+    default: "false"
+  update-db:
+    description: Ejecuta `depsentinel db update` antes de escanear (necesita la clave pública del feed configurada).
+    default: "false"
+  comment-on-pr:
+    description: Publica (o actualiza) un comentario con el resultado en el pull request.
+    default: "true"
+  upload-report:
+    description: Sube el informe JSON y el panel HTML como artefacto del workflow.
+    default: "true"
+  version:
+    description: >-
+      Versión (tag o commit) a instalar con `go install` cuando la acción no se usa desde el propio repositorio.
+      Recomendado: fija una versión concreta (por ejemplo v1.0.0) en lugar de latest.
+    default: "latest"
+  extra-args:
+    description: Argumentos adicionales para `depsentinel scan` (por ejemplo `--prod-only`).
+    default: ""
+  github-token:
+    description: Token para comentar en el pull request (necesita permiso pull-requests o issues de escritura).
+    default: ${{ github.token }}
+
+outputs:
+  risk-level:
+    description: Nivel de riesgo global (low, medium, high o critical).
+    value: ${{ steps.scan.outputs.risk-level }}
+  findings:
+    description: Número de hallazgos activos.
+    value: ${{ steps.scan.outputs.findings }}
+  report-path:
+    description: Ruta del informe JSON generado.
+    value: ${{ steps.scan.outputs.report-path }}
+
+runs:
+  using: composite
+  steps:
+    - name: Preparar Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: stable
+        cache: false
+
+    - name: Escanear dependencias
+      id: scan
+      shell: bash
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_FAIL_ON: ${{ inputs.fail-on }}
+        INPUT_ECOSYSTEM: ${{ inputs.ecosystem }}
+        INPUT_DEEP: ${{ inputs.deep }}
+        INPUT_UPDATE_DB: ${{ inputs.update-db }}
+        INPUT_COMMENT_ON_PR: ${{ inputs.comment-on-pr }}
+        INPUT_VERSION: ${{ inputs.version }}
+        INPUT_EXTRA_ARGS: ${{ inputs.extra-args }}
+        GH_TOKEN: ${{ inputs.github-token }}
+      run: bash "$ACTION_PATH/entrypoint.sh"
+
+    - name: Subir informe
+      if: ${{ always() && inputs.upload-report == 'true' && steps.scan.outputs.report-dir != '' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: depsentinel-report
+        path: ${{ steps.scan.outputs.report-dir }}
+        retention-days: 14
+
+    - name: Aplicar el resultado
+      if: ${{ always() && steps.scan.outputs.exit-code != '' && steps.scan.outputs.exit-code != '0' }}
+      shell: bash
+      env:
+        EXIT_CODE: ${{ steps.scan.outputs.exit-code }}
+      run: |
+        case "$EXIT_CODE" in
+          1) echo "::error title=DepSentinel::Hay hallazgos con severidad igual o superior al umbral (--fail-on)." ;;
+          *) echo "::error title=DepSentinel::El análisis terminó con el código $EXIT_CODE." ;;
+        esac
+        exit "$EXIT_CODE"

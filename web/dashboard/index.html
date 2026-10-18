@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="color-scheme" content="light dark">
+<title>Informe de DepSentinel</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231F3DDB'/%3E%3Cpath d='M16 12 9 20M16 12l7 8' stroke='%23fff' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='9' r='3.2' fill='%23fff'/%3E%3Ccircle cx='9' cy='23' r='3.2' fill='%23fff'/%3E%3Ccircle cx='23' cy='23' r='3.2' fill='%23FF6B1A'/%3E%3C/svg%3E">
+<style>
+:root {
+  --paper: #F2F4F7;
+  --surface: #FFFFFF;
+  --ink: #12263F;
+  --muted: #566679;
+  --line: #D5DCE6;
+  --accent: #1F3DDB;
+  --band: #1F3DDB;
+  --on-band: #FFFFFF;
+  --crit: #B42318; --crit-bg: #FDE7E4;
+  --high: #B34200; --high-bg: #FFE8D4;
+  --med: #7A5200; --med-bg: #FFF0C2;
+  --low: #1F5FA8; --low-bg: #E2EDFA;
+  --ok: #12805C; --ok-bg: #DAF2E8;
+  --shadow: 0 1px 2px rgba(18, 38, 63, .08), 0 8px 24px rgba(18, 38, 63, .06);
+  --ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --code: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0D1727;
+    --surface: #14223A;
+    --ink: #E8EEF7;
+    --muted: #A2B3C9;
+    --line: #2A3B57;
+    --accent: #93A5FF;
+    --band: #1A2FB0;
+    --crit: #FF9D92; --crit-bg: #4A1E1B;
+    --high: #FFB880; --high-bg: #4B2A12;
+    --med: #F5CF72; --med-bg: #43340F;
+    --low: #92C4FF; --low-bg: #13304F;
+    --ok: #74D9AB; --ok-bg: #11402F;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 var(--ui); }
+a { color: var(--accent); text-underline-offset: 2px; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+code, pre { font-family: var(--code); }
+
+/* Banda superior */
+.band { background: var(--band); color: var(--on-band); padding: 20px 20px 24px; }
+.band-inner { max-width: 1240px; margin: 0 auto; }
+.band-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: .01em; }
+.brand svg { width: 30px; height: 30px; display: block; }
+.band-target { flex: 1 1 260px; min-width: 0; opacity: .85; font-size: 14px; overflow-wrap: anywhere; }
+.band-actions { display: flex; gap: 8px; }
+.btn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 7px 12px; line-height: 1.25; }
+.btn:hover { border-color: var(--accent); }
+.btn.on-band { background: transparent; color: var(--on-band); border-color: rgba(255, 255, 255, .55); }
+.btn.on-band:hover { background: rgba(255, 255, 255, .12); border-color: #fff; }
+.btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+:root:not(.x) .btn.primary { color: #fff; }
+.verdict { margin: 22px 0 6px; font-size: clamp(24px, 4.2vw, 38px); line-height: 1.15; font-weight: 750; max-width: 36ch; text-wrap: balance; }
+.start { margin: 0; font-size: 15px; opacity: .95; }
+.start button { background: none; border: 0; padding: 0; color: inherit; text-decoration: underline; text-underline-offset: 3px; text-align: left; }
+.meter { display: flex; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 20px; background: rgba(255, 255, 255, .22); max-width: 760px; }
+.meter i { display: block; min-width: 4px; }
+.meter .c-crit { background: #FF6A5C; }
+.meter .c-high { background: #FF9A3D; }
+.meter .c-med { background: #FFD84A; }
+.meter .c-low { background: #8CC4FF; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 10px 0 0; padding: 0; list-style: none; font-size: 14px; }
+.legend li { display: flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.band-facts { margin: 14px 0 0; font-size: 13px; opacity: .8; }
+
+/* Estructura */
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+.notice { margin: 16px 0 0; padding: 12px 14px; border-radius: 10px; background: var(--med-bg); color: var(--med); font-size: 14px; }
+.notice.err { background: var(--crit-bg); color: var(--crit); }
+.notice ul { margin: 6px 0 0 18px; padding: 0; }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-top: 18px; overflow-x: auto; }
+.tab { background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 14px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tab .n { font-weight: 400; margin-left: 4px; color: var(--muted); }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 18px 0 60px; align-items: start; }
+@media (min-width: 1020px) { .layout.has-detail { grid-template-columns: minmax(0, 1fr) 430px; } }
+
+/* Filtros */
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 5px 12px; font-size: 14px; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.chip .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .25); }
+.field { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 6px 10px; min-height: 34px; }
+.field.search { flex: 1 1 200px; min-width: 150px; }
+.count { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
+
+/* Lista */
+.list { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+.list > li + li { border-top: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 4px 14px; width: 100%; text-align: left; background: none; border: 0; padding: 12px 14px; align-items: start; }
+button.row:hover { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.row[aria-current="true"] { background: color-mix(in srgb, var(--accent) 12%, transparent); box-shadow: inset 4px 0 0 var(--accent); }
+.row .head { font-weight: 650; overflow-wrap: anywhere; }
+.row .head .ver { font-weight: 400; color: var(--muted); }
+.row .title { color: var(--ink); overflow-wrap: anywhere; }
+.row .sub { color: var(--muted); font-size: 13px; margin-top: 2px; overflow-wrap: anywhere; }
+.row .fixed { color: var(--ok); font-weight: 600; }
+.badge { display: inline-block; border-radius: 6px; padding: 2px 8px; font-size: 13px; font-weight: 650; text-align: center; white-space: nowrap; }
+.s-critical { background: var(--crit-bg); color: var(--crit); }
+.s-high { background: var(--high-bg); color: var(--high); }
+.s-medium { background: var(--med-bg); color: var(--med); }
+.s-low { background: var(--low-bg); color: var(--low); }
+.s-none { background: var(--ok-bg); color: var(--ok); }
+.rec-avoid { background: var(--crit-bg); color: var(--crit); }
+.rec-update { background: var(--high-bg); color: var(--high); }
+.rec-review { background: var(--med-bg); color: var(--med); }
+.rec-use { background: var(--ok-bg); color: var(--ok); }
+.empty { padding: 36px 20px; text-align: left; color: var(--muted); }
+.empty strong { color: var(--ink); display: block; font-size: 18px; margin-bottom: 4px; }
+.row.pkg { grid-template-columns: 96px minmax(0, 1fr) 120px; }
+.mini { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; margin-top: 8px; }
+.mini i { display: block; height: 100%; background: var(--accent); }
+.mini.s-critical i { background: var(--crit); }
+.mini.s-high i { background: var(--high); }
+.mini.s-medium i { background: var(--med); }
+.mini.s-low i { background: var(--low); }
+.mini.s-critical, .mini.s-high, .mini.s-medium, .mini.s-low { background: var(--line); color: inherit; }
+.group-title { margin: 22px 0 8px; font-size: 15px; font-weight: 700; color: var(--muted); }
+
+/* Detalle */
+.detail { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 18px; position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow: auto; }
+.detail h2 { margin: 0; font-size: 22px; line-height: 1.2; overflow-wrap: anywhere; }
+.detail h2 .ver { color: var(--muted); font-weight: 400; }
+.detail h3 { margin: 22px 0 8px; font-size: 16px; }
+.detail .kind { margin: 4px 0 14px; color: var(--muted); font-size: 14px; }
+.detail .close { float: right; margin: -4px -6px 0 8px; }
+.verdict-box { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; align-items: center; }
+.score { font-size: 34px; line-height: 1; font-weight: 750; }
+.score small { font-size: 14px; font-weight: 400; color: var(--muted); }
+.finding { border-top: 1px solid var(--line); padding: 14px 0; }
+.finding .t { font-weight: 650; margin: 6px 0 4px; overflow-wrap: anywhere; }
+.finding p { margin: 6px 0; font-size: 15px; overflow-wrap: anywhere; }
+.finding .what { background: color-mix(in srgb, var(--accent) 8%, transparent); border-radius: 8px; padding: 8px 10px; }
+.finding .ids { color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.finding ul { margin: 6px 0 0 18px; padding: 0; font-size: 14px; overflow-wrap: anywhere; }
+.finding .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+dl.meta { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 14px; margin: 0; font-size: 14px; }
+dl.meta dt { color: var(--muted); }
+dl.meta dd { margin: 0; overflow-wrap: anywhere; }
+pre { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--paper); border: 1px solid var(--line); font-size: 13px; line-height: 1.45; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+.toast { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 9px 16px; border-radius: 10px; font-size: 14px; box-shadow: var(--shadow); z-index: 30; }
+.toast[hidden] { display: none; }
+
+/* Estado vacío y carga */
+.landing { max-width: 640px; padding: 48px 0; }
+.landing h1 { font-size: clamp(26px, 4vw, 36px); line-height: 1.15; margin: 0 0 12px; text-wrap: balance; }
+.landing p { margin: 0 0 14px; }
+.drop { border: 2px dashed var(--line); border-radius: 14px; padding: 26px; margin: 22px 0; }
+.drop.over { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+
+@media (max-width: 1019px) {
+  .detail { position: fixed; inset: 0; z-index: 10; max-height: none; border-radius: 0; border: 0; padding: 16px; }
+}
+@media (max-width: 560px) {
+  .row { grid-template-columns: minmax(0, 1fr); }
+  .row.pkg { grid-template-columns: minmax(0, 1fr); }
+  .row .badge { justify-self: start; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .toast { animation: pop .18s ease-out; }
+  @keyframes pop { from { opacity: 0; transform: translate(-50%, 6px); } }
+}
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="band-inner">
+    <div class="band-top">
+      <div class="brand">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#fff" fill-opacity=".16"/><path d="M16 12 9 20M16 12l7 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="9" r="3.2" fill="#fff"/><circle cx="9" cy="23" r="3.2" fill="#fff"/><circle cx="23" cy="23" r="3.2" fill="#FF6B1A"/></svg>
+        <span>DepSentinel</span>
+      </div>
+      <div class="band-target" id="target"></div>
+      <div class="band-actions">
+        <button class="btn on-band" id="btn-import" type="button">Abrir otro informe</button>
+      </div>
+    </div>
+    <div id="verdict-area"></div>
+  </div>
+</header>
+<main class="wrap" id="app"></main>
+<input class="sr" type="file" id="file" accept=".json,application/json" tabindex="-1" aria-label="Elegir informe JSON">
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script id="ds-data" type="application/json">null</script>
+<script>
+(function () {
+  'use strict';
+
+  var REPO = 'https://github.com/AlejandroMolines/depsentinel';
+  var SEV = ['critical', 'high', 'medium', 'low'];
+  var SEV_LABEL = { critical: 'Crítico', high: 'Alto', medium: 'Medio', low: 'Bajo' };
+  var SEV_PLURAL = { critical: ['crítico', 'críticos'], high: ['alto', 'altos'], medium: ['medio', 'medios'], low: ['bajo', 'bajos'] };
+  var REC_LABEL = { use: 'Usar', update: 'Actualizar', review: 'Revisar', avoid: 'Evitar' };
+  var ECO_LABEL = { npm: 'npm', pypi: 'PyPI', go: 'Go', docker: 'Docker', actions: 'GitHub Actions' };
+
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+
+  function h(tag, props) {
+    var el = document.createElement(tag);
+    if (props) {
+      Object.keys(props).forEach(function (k) {
+        var v = props[k];
+        if (v === false || v == null) return;
+        if (k === 'class') el.className = v;
+        else if (k === 'text') el.textContent = v;
+        else if (k === 'selected') el.selected = !!v;
+        else if (k === 'value') el.value = v;
+        else if (k.slice(0, 2) === 'on') el.addEventListener(k.slice(2), v);
+        else el.setAttribute(k, v === true ? '' : v);
+      });
+    }
+    for (var i = 2; i < arguments.length; i++) append(el, arguments[i]);
+    return el;
+  }
+  function append(el, kid) {
+    if (kid == null || kid === false) return;
+    if (Array.isArray(kid)) { kid.forEach(function (k) { append(el, k); }); return; }
+    el.appendChild(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  }
+  function clear(el) { while (el.firstChild) el.removeChild(el.firstChild); }
+
+  var store = {
+    get: function (k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* almacenamiento no disponible */ } }
+  };
+
+  var nf = new Intl.NumberFormat('es');
+  var df = new Intl.DateTimeFormat('es', { dateStyle: 'medium', timeStyle: 'short' });
+  var dayf = new Intl.DateTimeFormat('es', { dateStyle: 'medium' });
+  function fmtDate(s, dayOnly) {
+    if (!s) return '';
+    var d = new Date(s);
+    return isNaN(d) ? String(s) : (dayOnly ? dayf : df).format(d);
+  }
+  function plural(n, one, many) { return nf.format(n) + ' ' + (n === 1 ? one : many); }
+  function safeUrl(u) { return /^https?:\/\//i.test(String(u || '')) ? String(u) : null; }
+  function pkgLabel(name, version, eco) {
+    return version ? name + (eco === 'docker' ? ':' : '@') + version : name;
+  }
+  function fkey(f) { return [f.ecosystem, f.package, f.version || '', f.rule, f.id].join('|'); }
+  function pkey(eco, name, version) { return eco + '|' + name + '|' + (version || ''); }
+
+  var state = {
+    rep: null, tab: 'findings', sev: { critical: true, high: true, medium: true, low: true },
+    eco: '', rule: '', q: '', selected: null, fp: {}, pkgOnlyIssues: true, notice: ''
+  };
+  var pkgIndex = {};
+
+  function toast(msg) {
+    var t = $('#toast');
+    t.textContent = msg; t.hidden = false;
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(function () { t.hidden = true; }, 2400);
+  }
+
+  function copy(text, okMsg) {
+    function fallback() {
+      var ta = h('textarea', { 'aria-hidden': 'true', style: 'position:fixed;opacity:0;top:0;left:0' });
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      toast(ok ? okMsg : 'No se pudo copiar: selecciona y copia a mano');
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(function () { toast(okMsg); }, fallback);
+    } else { fallback(); }
+  }
+
+  function validate(rep) {
+    return !!(rep && typeof rep === 'object' && rep.tool === 'depsentinel' && Array.isArray(rep.findings) && rep.summary);
+  }
+
+  function setReport(rep, remember) {
+    rep.packages = rep.packages || [];
+    rep.suppressed = rep.suppressed || [];
+    rep.warnings = rep.warnings || [];
+    rep.sources = rep.sources || [];
+    rep.ecosystems = rep.ecosystems || [];
+    rep.summary.by_severity = rep.summary.by_severity || {};
+    pkgIndex = {};
+    rep.packages.forEach(function (p) { pkgIndex[pkey(p.ecosystem, p.name, p.version)] = p; });
+    state.rep = rep;
+    state.selected = null;
+    state.tab = 'findings';
+    state.eco = ''; state.rule = ''; state.q = '';
+    state.fp = store.get('ds:fp:' + rep.target, {});
+    if (remember) rememberScan(rep);
+    render();
+  }
+
+  function rememberScan(rep) {
+    var list = store.get('ds:history', []);
+    var id = rep.target + '|' + rep.generated_at;
+    if (list.some(function (e) { return e.id === id; })) return;
+    list.unshift({
+      id: id, target: rep.target, at: rep.generated_at, level: rep.summary.risk_level,
+      sev: rep.summary.by_severity, packages: rep.summary.packages
+    });
+    store.set('ds:history', list.slice(0, 60));
+  }
+
+  function loadText(text) {
+    var rep;
+    try { rep = JSON.parse(text); } catch (e) { rep = null; }
+    if (!validate(rep)) {
+      state.notice = 'Ese fichero no es un informe de DepSentinel. Genera uno con: depsentinel scan --format json --output report.json';
+      if (state.rep) render(); else renderEmpty();
+      return;
+    }
+    state.notice = '';
+    setReport(rep, true);
+  }
+
+  function readFile(file) {
+    if (!file) return;
+    var r = new FileReader();
+    r.onload = function () { loadText(String(r.result)); };
+    r.onerror = function () { state.notice = 'No se pudo leer el fichero.'; if (state.rep) render(); else renderEmpty(); };
+    r.readAsText(file);
+  }
+
+  // ---------- Banda superior ----------
+  function verdictText(rep) {
+    var s = rep.summary.by_severity;
+    var parts = [];
+    SEV.forEach(function (k) { if (s[k]) parts.push(plural(s[k], SEV_PLURAL[k][0], SEV_PLURAL[k][1])); });
+    if (!parts.length) return 'Sin hallazgos en ' + plural(rep.summary.packages, 'paquete', 'paquetes') + '.';
+    var list = parts.length > 1 ? parts.slice(0, -1).join(', ') + ' y ' + parts[parts.length - 1] : parts[0];
+    var level = { critical: 'crítico', high: 'alto', medium: 'medio', low: 'bajo' }[rep.summary.risk_level] || 'bajo';
+    return 'Riesgo ' + level + ': ' + list + ' entre ' + plural(rep.summary.packages, 'paquete', 'paquetes') + '.';
+  }
+
+  function renderBand() {
+    var rep = state.rep;
+    var tgt = $('#target');
+    var area = $('#verdict-area');
+    clear(area);
+    if (!rep) { tgt.textContent = ''; return; }
+    tgt.textContent = rep.target;
+    var s = rep.summary.by_severity;
+    var total = SEV.reduce(function (a, k) { return a + (s[k] || 0); }, 0);
+    area.appendChild(h('p', { class: 'verdict', text: verdictText(rep) }));
+    var first = rep.findings[0];
+    if (first) {
+      area.appendChild(h('p', { class: 'start' }, 'Empieza por ',
+        h('button', { type: 'button', onclick: function () { selectFinding(first); } }, pkgLabel(first.package, first.version, first.ecosystem)),
+        ': ' + first.title));
+    }
+    if (total) {
+      var meter = h('div', { class: 'meter', role: 'img', 'aria-label': 'Reparto de hallazgos por severidad' });
+      var cls = { critical: 'c-crit', high: 'c-high', medium: 'c-med', low: 'c-low' };
+      SEV.forEach(function (k) { if (s[k]) meter.appendChild(h('i', { class: cls[k], style: 'flex:' + s[k] })); });
+      area.appendChild(meter);
+      var legend = h('ul', { class: 'legend' });
+      var colors = { critical: '#FF6A5C', high: '#FF9A3D', medium: '#FFD84A', low: '#8CC4FF' };
+      SEV.forEach(function (k) {
+        if (s[k]) legend.appendChild(h('li', null, h('i', { style: 'background:' + colors[k] }), plural(s[k], SEV_PLURAL[k][0], SEV_PLURAL[k][1])));
+      });
+      area.appendChild(legend);
+    }
+    var facts = [];
+    if (rep.ecosystems.length) facts.push(rep.ecosystems.map(function (e) { return ECO_LABEL[e] || e; }).join(', '));
+    facts.push('generado el ' + fmtDate(rep.generated_at));
+    facts.push('DepSentinel ' + rep.version);
+    if (rep.offline) facts.push('sin conexión');
+    area.appendChild(h('p', { class: 'band-facts', text: facts.join(' · ') }));
+  }
+
+  // ---------- Pantallas ----------
+  function renderEmpty() {
+    state.rep = null;
+    renderBand();
+    var app = $('#app'); clear(app);
+    var drop = h('div', { class: 'drop', id: 'drop' },
+      h('p', null, 'Arrastra aquí el informe JSON o elígelo en tu equipo.'),
+      h('button', { class: 'btn primary', type: 'button', onclick: function () { $('#file').click(); } }, 'Elegir informe'));
+    app.appendChild(h('section', { class: 'landing' },
+      h('h1', { text: 'Abre un informe de DepSentinel' }),
+      h('p', null, 'Este panel se ejecuta entero en tu navegador: el informe no sale de tu equipo.'),
+      state.notice ? h('p', { class: 'notice err', role: 'alert', text: state.notice }) : null,
+      drop,
+      h('p', null, 'Para generar un informe:'),
+      h('pre', { text: 'depsentinel scan --format json --output report.json' }),
+      h('p', null, ''),
+      h('p', null, 'O usa depsentinel report --html para abrir este panel con el resultado ya cargado.'),
+      renderHistoryList(true)));
+  }
+
+  function tabButton(id, label, n) {
+    return h('button', {
+      class: 'tab', type: 'button', role: 'tab', id: 'tab-' + id, 'aria-selected': state.tab === id ? 'true' : 'false',
+      onclick: function () { state.tab = id; if (id === 'history') state.selected = null; render(); }
+    }, label, n != null ? h('span', { class: 'n', text: '(' + nf.format(n) + ')' }) : null);
+  }
+
+  function render() {
+    renderBand();
+    var rep = state.rep;
+    if (!rep) { renderEmpty(); return; }
+    var app = $('#app'); clear(app);
+    if (state.notice) app.appendChild(h('p', { class: 'notice err', role: 'alert', text: state.notice }));
+    if (rep.incomplete || rep.warnings.length) {
+      var box = h('div', { class: 'notice', role: 'status' },
+        h('strong', { text: rep.incomplete ? 'El análisis está incompleto.' : 'Avisos del análisis.' }));
+      if (rep.warnings.length) {
+        var ul = h('ul');
+        rep.warnings.slice(0, 8).forEach(function (w) { ul.appendChild(h('li', { text: w })); });
+        box.appendChild(ul);
+      }
+      app.appendChild(box);
+    }
+    var fpCount = Object.keys(state.fp).length;
+    app.appendChild(h('div', { class: 'tabs', role: 'tablist' },
+      tabButton('findings', 'Hallazgos', rep.findings.length),
+      tabButton('packages', 'Paquetes', rep.packages.length),
+      tabButton('fp', 'Falsos positivos', fpCount),
+      tabButton('history', 'Historial')));
+
+    var layout = h('div', { class: 'layout' + (state.selected && state.tab !== 'history' ? ' has-detail' : '') });
+    var main = h('section', { 'aria-labelledby': 'tab-' + state.tab });
+    layout.appendChild(main);
+    if (state.tab === 'findings') renderFindings(main);
+    else if (state.tab === 'packages') renderPackages(main);
+    else if (state.tab === 'fp') renderFP(main);
+    else main.appendChild(renderHistoryList(false));
+    if (state.selected && state.tab !== 'history') layout.appendChild(renderDetail());
+    app.appendChild(layout);
+  }
+
+  // ---------- Hallazgos ----------
+  function matches(f) {
+    if (!state.sev[f.severity]) return false;
+    if (state.eco && f.ecosystem !== state.eco) return false;
+    if (state.rule && f.rule !== state.rule) return false;
+    if (state.q) {
+      var hay = (f.package + ' ' + f.title + ' ' + f.id + ' ' + f.rule + ' ' + (f.aliases || []).join(' ')).toLowerCase();
+      if (hay.indexOf(state.q.toLowerCase()) < 0) return false;
+    }
+    return true;
+  }
+
+  function option(value, label, selected) { return h('option', { value: value, selected: selected }, label); }
+
+  function filterBar(repaint) {
+    var rep = state.rep;
+    var bar = h('div', { class: 'toolbar', role: 'group', 'aria-label': 'Filtros' });
+    var colors = { critical: '#FF6A5C', high: '#FF9A3D', medium: '#FFD84A', low: '#8CC4FF' };
+    SEV.forEach(function (k) {
+      var n = rep.summary.by_severity[k] || 0;
+      bar.appendChild(h('button', {
+        class: 'chip', type: 'button', 'aria-pressed': state.sev[k] ? 'true' : 'false',
+        onclick: function (e) {
+          state.sev[k] = !state.sev[k];
+          e.currentTarget.setAttribute('aria-pressed', state.sev[k] ? 'true' : 'false');
+          repaint();
+        }
+      }, h('span', { class: 'dot', style: 'background:' + colors[k] }), SEV_LABEL[k] + ' ' + nf.format(n)));
+    });
+    var ecos = {}; var rules = {};
+    rep.findings.concat(rep.suppressed).forEach(function (f) { ecos[f.ecosystem] = 1; rules[f.rule] = 1; });
+    var selEco = h('select', { class: 'field', 'aria-label': 'Ecosistema', onchange: function (e) { state.eco = e.target.value; repaint(); } },
+      option('', 'Todos los ecosistemas', state.eco === ''),
+      Object.keys(ecos).sort().map(function (e) { return option(e, ECO_LABEL[e] || e, state.eco === e); }));
+    var selRule = h('select', { class: 'field', 'aria-label': 'Regla', onchange: function (e) { state.rule = e.target.value; repaint(); } },
+      option('', 'Todas las reglas', state.rule === ''),
+      Object.keys(rules).sort().map(function (r) { return option(r, r, state.rule === r); }));
+    var search = h('input', {
+      class: 'field search', type: 'search', placeholder: 'Buscar paquete, aviso o regla', 'aria-label': 'Buscar', value: state.q,
+      oninput: function (e) { state.q = e.target.value; repaint(); }
+    });
+    bar.appendChild(selEco); bar.appendChild(selRule); bar.appendChild(search);
+    return bar;
+  }
+
+  function findingRow(f, allowed) {
+    var pk = pkgIndex[pkey(f.ecosystem, f.package, f.version)];
+    var sel = state.selected && state.selected.key === pkey(f.ecosystem, f.package, f.version);
+    var sub = (ECO_LABEL[f.ecosystem] || f.ecosystem) + ' · ' + f.rule + (f.id && f.id !== f.rule ? ' · ' + f.id : '');
+    return h('li', null, h('button', {
+      class: 'row', type: 'button', 'aria-current': sel ? 'true' : 'false',
+      onclick: function () { selectFinding(f); }
+    },
+      h('span', { class: 'badge s-' + f.severity, text: SEV_LABEL[f.severity] }),
+      h('span', null,
+        h('span', { class: 'head' }, f.package, f.version ? h('span', { class: 'ver', text: ' ' + f.version }) : null),
+        h('div', { class: 'title', text: f.title }),
+        h('div', { class: 'sub' }, sub,
+          f.fixed_in ? h('span', null, ' · ', h('span', { class: 'fixed', text: 'corregido en ' + f.fixed_in })) : null,
+          allowed && f.allowed ? ' · en lista blanca: ' + f.allowed.reason : null,
+          pk && pk.direct ? ' · dependencia directa' : null))));
+  }
+
+  function renderFindings(main) {
+    var rep = state.rep;
+    var listBox = h('div');
+    var countEl = h('p', { class: 'count', 'aria-live': 'polite' });
+    function paint() {
+      var items = rep.findings.filter(function (f) { return matches(f) && !state.fp[fkey(f)]; });
+      var hidden = rep.findings.filter(function (f) { return state.fp[fkey(f)]; }).length;
+      clear(listBox);
+      countEl.textContent = 'Mostrando ' + nf.format(items.length) + ' de ' + nf.format(rep.findings.length) + ' hallazgos' +
+        (hidden ? ' (' + nf.format(hidden) + ' marcados como falso positivo)' : '');
+      if (!rep.findings.length) {
+        listBox.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' },
+          h('strong', { text: 'Sin hallazgos' }), 'Todas las dependencias pasan las reglas activas.')));
+      } else if (!items.length) {
+        listBox.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' },
+          h('strong', { text: 'Ningún hallazgo coincide' }), 'Activa más severidades o borra la búsqueda.')));
+      } else {
+        var ul = h('ul', { class: 'list' });
+        items.forEach(function (f) { ul.appendChild(findingRow(f)); });
+        listBox.appendChild(ul);
+      }
+      if (rep.suppressed.length) {
+        listBox.appendChild(h('p', { class: 'group-title' }, 'En lista blanca (' + nf.format(rep.suppressed.length) + ')'));
+        var shown = rep.suppressed.filter(matches);
+        if (shown.length) {
+          var ul2 = h('ul', { class: 'list' });
+          shown.forEach(function (f) { ul2.appendChild(findingRow(f, true)); });
+          listBox.appendChild(ul2);
+        } else {
+          listBox.appendChild(h('p', { class: 'count', text: 'Ninguna coincide con los filtros.' }));
+        }
+      }
+    }
+    main.appendChild(filterBar(paint));
+    main.appendChild(countEl);
+    main.appendChild(listBox);
+    paint();
+  }
+
+  // ---------- Paquetes ----------
+  function renderPackages(main) {
+    var rep = state.rep;
+    var only = h('button', {
+      class: 'chip', type: 'button', 'aria-pressed': state.pkgOnlyIssues ? 'true' : 'false',
+      onclick: function () { state.pkgOnlyIssues = !state.pkgOnlyIssues; render(); }
+    }, 'Solo con hallazgos');
+    var search = h('input', {
+      class: 'field search', type: 'search', placeholder: 'Buscar paquete', 'aria-label': 'Buscar paquete', value: state.q,
+      oninput: function (e) { state.q = e.target.value; paint(); }
+    });
+    main.appendChild(h('div', { class: 'toolbar' }, only, search));
+    var countEl = h('p', { class: 'count', 'aria-live': 'polite' });
+    var box = h('div');
+    main.appendChild(countEl); main.appendChild(box);
+    function paint() {
+      clear(box);
+      var items = rep.packages.filter(function (p) {
+        if (state.pkgOnlyIssues && !p.findings) return false;
+        return !state.q || (p.name + ' ' + p.version).toLowerCase().indexOf(state.q.toLowerCase()) >= 0;
+      });
+      var shown = items.slice(0, 300);
+      countEl.textContent = 'Mostrando ' + nf.format(shown.length) + ' de ' + nf.format(items.length) + ' paquetes' +
+        (items.length > shown.length ? ' (afina la búsqueda para ver el resto)' : '');
+      if (!shown.length) {
+        box.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' }, h('strong', { text: 'Nada que mostrar' }),
+          state.pkgOnlyIssues ? 'Ningún paquete tiene hallazgos. Quita «Solo con hallazgos» para ver todos.' : 'La búsqueda no coincide con ningún paquete.')));
+        return;
+      }
+      var ul = h('ul', { class: 'list' });
+      shown.forEach(function (p) {
+        var sel = state.selected && state.selected.key === pkey(p.ecosystem, p.name, p.version);
+        var sub = (ECO_LABEL[p.ecosystem] || p.ecosystem) + (p.direct ? ' · directa' : ' · transitiva') + (p.dev ? ' · desarrollo' : '') +
+          (p.findings ? ' · ' + plural(p.findings, 'hallazgo', 'hallazgos') : '');
+        ul.appendChild(h('li', null, h('button', {
+          class: 'row pkg', type: 'button', 'aria-current': sel ? 'true' : 'false',
+          onclick: function () { selectPackage(p.ecosystem, p.name, p.version); }
+        },
+          h('span', { class: 'badge rec-' + p.recommendation, text: REC_LABEL[p.recommendation] || p.recommendation }),
+          h('span', null,
+            h('span', { class: 'head' }, p.name, p.version ? h('span', { class: 'ver', text: ' ' + p.version }) : null),
+            h('div', { class: 'sub', text: sub })),
+          h('span', null, h('span', { class: 'sub', text: 'Riesgo ' + p.risk_score + ' de 100' }),
+            h('div', { class: 'mini s-' + p.risk_level }, h('i', { style: 'width:' + Math.max(p.risk_score, 3) + '%' }))))));
+      });
+      box.appendChild(ul);
+    }
+    paint();
+  }
+
+  // ---------- Falsos positivos ----------
+  function saveFP() { store.set('ds:fp:' + state.rep.target, state.fp); }
+
+  function shq(s) { return /^[A-Za-z0-9@._\/:+-]+$/.test(s) ? s : "'" + s.replace(/'/g, "'\\''") + "'"; }
+
+  function allowCommand(f) {
+    var args = ['depsentinel allowlist add', shq(f.package + (f.version ? '@' + f.version : '')), '--ecosystem', f.ecosystem];
+    if (f.rule) args.push('--rule', f.rule);
+    args.push('--reason', '"describe por qué es seguro"');
+    return args.join(' ');
+  }
+
+  function issueUrl(f) {
+    var q = [
+      ['template', 'falso-positivo.yml'],
+      ['title', 'Falso positivo: ' + f.rule + ' en ' + f.package],
+      ['ecosystem', f.ecosystem], ['package', f.package + (f.version ? '@' + f.version : '')], ['rule', f.rule]
+    ].map(function (kv) { return encodeURIComponent(kv[0]) + '=' + encodeURIComponent(kv[1]); }).join('&');
+    return REPO + '/issues/new?' + q;
+  }
+
+  function renderFP(main) {
+    var rep = state.rep;
+    var flagged = rep.findings.filter(function (f) { return state.fp[fkey(f)]; });
+    main.appendChild(h('p', { class: 'count' },
+      'Aquí van los hallazgos que has marcado como falso positivo. La marca solo existe en este navegador: para que el CI los ignore hay que añadirlos a la lista blanca con una justificación.'));
+    if (!flagged.length) {
+      main.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' }, h('strong', { text: 'Todavía no has marcado ninguno' }),
+        'Abre un hallazgo y pulsa «Marcar como falso positivo».')));
+      return;
+    }
+    var script = flagged.map(allowCommand).join('\n');
+    main.appendChild(h('div', { class: 'toolbar' },
+      h('button', { class: 'btn primary', type: 'button', onclick: function () { copy(script, 'Comandos copiados'); } }, 'Copiar comandos de la lista blanca'),
+      h('button', { class: 'btn', type: 'button', onclick: function () { flagged.forEach(function (f) { delete state.fp[fkey(f)]; }); saveFP(); render(); } }, 'Quitar todas las marcas')));
+    var ul = h('ul', { class: 'list' });
+    flagged.forEach(function (f) { ul.appendChild(findingRow(f)); });
+    main.appendChild(ul);
+    main.appendChild(h('p', { class: 'group-title', text: 'Comandos' }));
+    main.appendChild(h('pre', { text: script }));
+  }
+
+  // ---------- Detalle ----------
+  function selectFinding(f) { selectPackage(f.ecosystem, f.package, f.version); }
+  function selectPackage(eco, name, version) {
+    state.selected = { key: pkey(eco, name, version), eco: eco, name: name, version: version };
+    if (state.tab === 'history') state.tab = 'findings';
+    render();
+    var d = $('.detail');
+    if (d) {
+      d.scrollTop = 0;
+      var c = $('.close', d);
+      if (c && window.matchMedia('(max-width: 1019px)').matches) c.focus();
+    }
+  }
+
+  function metaRows(p) {
+    var m = p.meta || {};
+    var rows = [];
+    function add(k, v) { if (v) rows.push([k, v]); }
+    add('Ecosistema', ECO_LABEL[p.ecosystem] || p.ecosystem);
+    add('Tipo', (p.direct ? 'Dependencia directa' : 'Dependencia transitiva') + (p.dev ? ' (solo desarrollo)' : ''));
+    add('Declarada en', p.source);
+    add('Última versión', m.latest);
+    add('Esta versión se publicó', fmtDate(m.published, true));
+    add('Último lanzamiento', fmtDate(m.last_release, true));
+    add('Publicó esta versión', m.publisher);
+    if (m.previous_publisher) add('Publicó la anterior (' + (m.previous_version || '') + ')', m.previous_publisher);
+    if (m.maintainers && m.maintainers.length) add('Mantenedores', m.maintainers.join(', '));
+    if (m.new_maintainers && m.new_maintainers.length) add('Mantenedores nuevos', m.new_maintainers.join(', '));
+    add('Licencia', m.license);
+    if (m.deprecated) add('Deprecado', m.deprecated);
+    if (m.yanked) add('Retirada (yanked)', m.yanked_reason || 'sí');
+    if (m.sdist_only) add('Distribución', 'Solo código fuente: ejecuta código de compilación al instalar');
+    return rows;
+  }
+
+  function renderDetail() {
+    var sel = state.selected, rep = state.rep;
+    var p = pkgIndex[sel.key] || { ecosystem: sel.eco, name: sel.name, version: sel.version, risk_score: 0, risk_level: 'low', recommendation: 'use', findings: 0 };
+    var same = function (f) { return pkey(f.ecosystem, f.package, f.version) === sel.key; };
+    var fs = rep.findings.filter(same);
+    var allowed = rep.suppressed.filter(same);
+    var det = h('aside', { class: 'detail', 'aria-label': 'Detalle del paquete' });
+    det.appendChild(h('button', { class: 'btn close', type: 'button', onclick: function () { state.selected = null; render(); } }, 'Cerrar'));
+    det.appendChild(h('h2', null, p.name, p.version ? h('span', { class: 'ver', text: ' ' + p.version }) : null));
+    det.appendChild(h('p', { class: 'kind', text: (ECO_LABEL[p.ecosystem] || p.ecosystem) + (p.direct ? ' · dependencia directa' : '') }));
+
+    var level = p.findings ? p.risk_level : 'low';
+    det.appendChild(h('div', { class: 'verdict-box' },
+      h('div', { class: 'score' }, String(p.risk_score), h('small', { text: ' de 100' })),
+      h('div', null,
+        h('span', { class: 'badge rec-' + p.recommendation, text: REC_LABEL[p.recommendation] || p.recommendation }),
+        h('div', { class: 'mini s-' + level }, h('i', { style: 'width:' + Math.max(p.risk_score, 3) + '%' })))));
+
+    det.appendChild(h('h3', { text: fs.length ? plural(fs.length, 'hallazgo', 'hallazgos') : 'Sin hallazgos' }));
+    if (!fs.length) det.appendChild(h('p', { text: 'Este paquete no incumple ninguna regla activa.' }));
+    fs.forEach(function (f) { det.appendChild(findingBlock(f)); });
+
+    var m = p.meta || {};
+    if (m.install_scripts && Object.keys(m.install_scripts).length) {
+      det.appendChild(h('h3', { text: 'Scripts de instalación' }));
+      det.appendChild(h('pre', { text: Object.keys(m.install_scripts).map(function (k) { return k + ': ' + m.install_scripts[k]; }).join('\n') }));
+    }
+    if (m.script_hits && m.script_hits.length) {
+      det.appendChild(h('h3', { text: 'Indicios en los scripts' }));
+      var ul = h('ul');
+      m.script_hits.forEach(function (x) { ul.appendChild(h('li', { text: (SEV_LABEL[x.severity] || x.severity) + ': ' + x.why + (x.file ? ' (' + x.file + ')' : '') })); });
+      det.appendChild(ul);
+    }
+    det.appendChild(h('h3', { text: 'Datos del paquete' }));
+    var dl = h('dl', { class: 'meta' });
+    metaRows(p).forEach(function (r) { dl.appendChild(h('dt', { text: r[0] })); dl.appendChild(h('dd', { text: r[1] })); });
+    det.appendChild(dl);
+    var repo = m.repository && safeUrl(m.repository);
+    if (repo) det.appendChild(h('p', null, h('a', { href: repo, target: '_blank', rel: 'noopener noreferrer' }, 'Ver el repositorio')));
+    if (allowed.length) {
+      det.appendChild(h('h3', { text: 'En lista blanca' }));
+      allowed.forEach(function (f) {
+        det.appendChild(h('p', null, h('strong', { text: f.rule + ': ' }), f.title, h('br'),
+          h('span', { class: 'ids', text: 'Motivo: ' + (f.allowed ? f.allowed.reason : '') + (f.allowed && f.allowed.expires ? ' (caduca el ' + f.allowed.expires + ')' : '') })));
+      });
+    }
+    return det;
+  }
+
+  function findingBlock(f) {
+    var flagged = !!state.fp[fkey(f)];
+    var blk = h('div', { class: 'finding' });
+    blk.appendChild(h('span', { class: 'badge s-' + f.severity, text: SEV_LABEL[f.severity] }));
+    blk.appendChild(h('div', { class: 't', text: f.title }));
+    var ids = f.rule + (f.id && f.id !== f.rule ? ' · ' + f.id : '') + ((f.aliases && f.aliases.length) ? ' · ' + f.aliases.slice(0, 4).join(', ') : '');
+    blk.appendChild(h('div', { class: 'ids', text: ids }));
+    if (f.detail) blk.appendChild(h('p', { text: f.detail }));
+    if (f.fix) blk.appendChild(h('p', { class: 'what' }, h('strong', { text: 'Qué hacer: ' }), f.fix));
+    var refs = (f.references || []).map(safeUrl).filter(Boolean);
+    if (refs.length) {
+      var ul = h('ul');
+      refs.slice(0, 5).forEach(function (u) { ul.appendChild(h('li', null, h('a', { href: u, target: '_blank', rel: 'noopener noreferrer', text: u }))); });
+      blk.appendChild(ul);
+    }
+    if (f.source) blk.appendChild(h('div', { class: 'ids', text: 'Detectado en ' + f.source + (f.line ? ':' + f.line : '') }));
+    blk.appendChild(h('div', { class: 'acts' },
+      h('button', { class: 'btn', type: 'button', onclick: function () { copy(allowCommand(f), 'Comando copiado'); } }, 'Copiar comando para la lista blanca'),
+      h('button', {
+        class: 'btn', type: 'button', 'aria-pressed': flagged ? 'true' : 'false',
+        onclick: function () {
+          if (flagged) delete state.fp[fkey(f)]; else state.fp[fkey(f)] = 1;
+          saveFP(); toast(flagged ? 'Marca quitada' : 'Marcado como falso positivo (solo en este navegador)'); render();
+        }
+      }, flagged ? 'Quitar marca de falso positivo' : 'Marcar como falso positivo'),
+      h('a', { class: 'btn', href: issueUrl(f), target: '_blank', rel: 'noopener noreferrer', style: 'text-decoration:none' }, 'Avisar al proyecto')));
+    return blk;
+  }
+
+  // ---------- Historial ----------
+  function renderHistoryList(compact) {
+    var list = store.get('ds:history', []);
+    var wrap = h('div');
+    if (!list.length) {
+      if (!compact) wrap.appendChild(h('div', { class: 'list' }, h('div', { class: 'empty' }, h('strong', { text: 'Todavía no hay historial' }),
+        'Cada informe que abres aquí se guarda en este navegador (solo un resumen) para comparar la evolución.')));
+      return wrap;
+    }
+    var byTarget = {}; var order = [];
+    list.forEach(function (e) { if (!byTarget[e.target]) { byTarget[e.target] = []; order.push(e.target); } byTarget[e.target].push(e); });
+    wrap.appendChild(h('p', { class: compact ? 'group-title' : 'count', text: compact ? 'Proyectos que has abierto' : 'Proyectos escaneados. Se guarda solo un resumen de cada informe, en este navegador.' }));
+    var ul = h('ul', { class: 'list' });
+    order.forEach(function (t) {
+      var runs = byTarget[t]; var last = runs[0], prev = runs[1];
+      var s = last.sev || {};
+      var any = SEV.some(function (k) { return s[k]; });
+      var delta = '';
+      if (prev) {
+        var ps = prev.sev || {};
+        var d = (s.critical || 0) + (s.high || 0) - (ps.critical || 0) - (ps.high || 0);
+        delta = d === 0 ? ' Sin cambios en críticos y altos desde ' + fmtDate(prev.at, true) + '.' :
+          (d > 0 ? ' ' + plural(d, 'crítico o alto más', 'críticos o altos más') : ' ' + plural(-d, 'crítico o alto menos', 'críticos o altos menos')) + ' desde ' + fmtDate(prev.at, true) + '.';
+      }
+      var isCurrent = state.rep && state.rep.target === t;
+      var summary = SEV.filter(function (k) { return s[k]; }).map(function (k) { return plural(s[k], SEV_PLURAL[k][0], SEV_PLURAL[k][1]); }).join(', ') || 'Sin hallazgos';
+      ul.appendChild(h('li', null, h('div', { class: 'row' },
+        h('span', { class: 'badge s-' + (any ? last.level : 'none'), text: any ? SEV_LABEL[last.level] : 'Limpio' }),
+        h('span', null,
+          h('span', { class: 'head', text: t }),
+          h('div', { class: 'title', text: summary }),
+          h('div', { class: 'sub', text: fmtDate(last.at) + ' · ' + plural(last.packages, 'paquete', 'paquetes') + (isCurrent ? ' · informe abierto' : '') + delta })))));
+    });
+    wrap.appendChild(ul);
+    if (!compact) {
+      wrap.appendChild(h('div', { class: 'toolbar', style: 'margin-top:12px' },
+        h('button', { class: 'btn', type: 'button', onclick: function () { store.set('ds:history', []); render(); toast('Historial borrado'); } }, 'Borrar historial')));
+    }
+    return wrap;
+  }
+
+  // ---------- Arranque ----------
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && state.selected) { state.selected = null; render(); }
+  });
+  $('#btn-import').addEventListener('click', function () { $('#file').click(); });
+  $('#file').addEventListener('change', function (e) { readFile(e.target.files[0]); e.target.value = ''; });
+  window.addEventListener('dragover', function (e) { e.preventDefault(); var d = $('#drop'); if (d) d.classList.add('over'); });
+  window.addEventListener('dragleave', function () { var d = $('#drop'); if (d) d.classList.remove('over'); });
+  window.addEventListener('drop', function (e) {
+    e.preventDefault();
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) readFile(f);
+  });
+
+  var rep = null;
+  try { rep = JSON.parse($('#ds-data').textContent); } catch (e) { rep = null; }
+  if (validate(rep)) setReport(rep, true);
+  else renderEmpty();
+})();
+</script>
+</body>
+</html>

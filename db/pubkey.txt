@@ -1,0 +1,3 @@
+# Clave pública Ed25519 (base64) con la que se firman los feeds de `depsentinel db update`.
+# Déjala vacía hasta generar la tuya:  go run ./cmd/dbtool keygen
+# Después pega aquí la línea "public:" y recompila.

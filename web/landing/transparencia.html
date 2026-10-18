@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transparencia · DepSentinel</title>
+<meta name="description" content="Cuánto cuesta mantener DepSentinel y de dónde sale el dinero. Las donaciones nunca desbloquean funciones.">
+<meta name="theme-color" content="#1F3DDB">
+<link rel="alternate" hreflang="es" href="transparencia.html">
+<link rel="alternate" hreflang="en" href="en/transparency.html">
+<link rel="alternate" hreflang="x-default" href="transparencia.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231F3DDB'/%3E%3Cpath d='M16 12 9 20M16 12l7 8' stroke='%23fff' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='9' r='3.2' fill='%23fff'/%3E%3Ccircle cx='9' cy='23' r='3.2' fill='%23fff'/%3E%3Ccircle cx='23' cy='23' r='3.2' fill='%23FF6B1A'/%3E%3C/svg%3E">
+<style>
+@font-face { font-family: "Archivo Variable"; src: url("fonts/archivo-latin-wdth-normal.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible"; src: url("fonts/atkinson-hyperlegible-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible"; src: url("fonts/atkinson-hyperlegible-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+:root {
+  --ultra: #1F3DDB; --paper: #F2F4F7; --white: #FFFFFF; --ink: #12263F; --muted: #4B5D73; --line: #D3DAE5; --tint: #E4E9FA; --orange: #FF6B1A; --ok: #12805C;
+  --display: "Archivo Variable", "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 1.125rem/1.6 var(--body); }
+a { color: inherit; text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; border-radius: 4px; }
+.wrap { width: min(1080px, 100% - 40px); margin-inline: auto; }
+h1, h2, h3 { font-family: var(--display); font-weight: 800; font-stretch: 78%; letter-spacing: -.012em; line-height: 1.02; margin: 0; text-wrap: balance; }
+p { margin: 0 0 1em; }
+code { font-family: var(--mono); font-size: .92em; background: rgba(31, 61, 219, .09); border-radius: 5px; padding: 1px 6px; }
+.hero { background: var(--ultra); color: var(--white); padding-bottom: 72px; }
+.nav { display: flex; align-items: center; gap: 12px 28px; flex-wrap: wrap; padding: 22px 0; }
+.logo { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-stretch: 85%; font-size: 1.55rem; text-decoration: none; margin-right: auto; }
+.logo svg { width: 34px; height: 34px; display: block; }
+.nav a:not(.logo) { text-decoration: none; opacity: .92; }
+.nav a:not(.logo):hover { text-decoration: underline; opacity: 1; }
+.hero h1 { font-size: clamp(3rem, 8vw, 5.6rem); line-height: .95; margin-top: 36px; max-width: 12em; }
+.lead { font-size: 1.3rem; max-width: 34em; margin: 22px 0 0; color: rgba(255, 255, 255, .94); }
+section { padding: 80px 0; }
+@media (max-width: 700px) { section { padding: 56px 0; } }
+h2 { font-size: clamp(2.2rem, 4.6vw, 3.4rem); margin-bottom: 28px; }
+.rules { list-style: none; margin: 0; padding: 0; display: grid; gap: 28px; }
+.rules li { display: grid; gap: 4px 40px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 860px) { .rules li { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); } }
+.rules strong { font-family: var(--display); font-stretch: 78%; font-weight: 800; font-size: 1.7rem; line-height: 1.1; }
+.rules span { max-width: 38em; }
+.accounts { background: var(--white); }
+.totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 28px 40px; margin: 0 0 40px; }
+.totals div { min-width: 0; }
+.totals dt { color: var(--muted); font-size: 1rem; }
+.totals dd { margin: 2px 0 0; font-family: var(--display); font-stretch: 78%; font-weight: 800; font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 1rem; }
+th, td { padding: 12px 14px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--muted); font-weight: 700; font-size: .95rem; }
+td.note { text-align: left; white-space: normal; min-width: 14em; color: var(--muted); }
+td.neg { color: #B42318; }
+.tablewrap + p { margin-top: 18px; }
+.empty { background: var(--tint); border-radius: 14px; padding: 26px 28px; max-width: 44em; }
+.empty strong { display: block; font-family: var(--display); font-stretch: 78%; font-size: 1.7rem; margin-bottom: 6px; }
+.spend { display: grid; gap: 12px; padding-left: 1.2em; margin: 0; max-width: 40em; }
+.give { background: var(--ultra); color: var(--white); }
+.give h2 { color: var(--white); }
+.links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+.btn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 10px; font-weight: 700; text-decoration: none; border: 2px solid transparent; }
+.btn.solid { background: var(--white); color: var(--ultra); }
+.btn.ghost { color: var(--white); border-color: rgba(255, 255, 255, .6); }
+.btn.solid:hover { background: #E8EDFF; }
+.btn.ghost:hover { background: rgba(255, 255, 255, .14); border-color: var(--white); }
+footer { padding: 36px 0 52px; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 26px; }
+footer a { color: var(--ink); }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <nav class="nav" aria-label="Principal">
+      <a class="logo" href="index.html" aria-label="DepSentinel, inicio">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#fff" fill-opacity=".16"/><path d="M16 12 9 20M16 12l7 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="9" r="3.2" fill="#fff"/><circle cx="9" cy="23" r="3.2" fill="#fff"/><circle cx="23" cy="23" r="3.2" fill="#FF6B1A"/></svg>
+        DepSentinel
+      </a>
+      <a href="index.html#que-detecta">Qué detecta</a>
+      <a href="index.html#como-se-usa">Cómo se usa</a>
+      <a href="index.html#privacidad">Privacidad</a>
+      <a href="https://github.com/AlejandroMolines/depsentinel">GitHub</a>
+      <a href="en/transparency.html" hreflang="en" lang="en" data-lang="en">English</a>
+    </nav>
+    <h1>Transparencia</h1>
+    <p class="lead">Cuánto cuesta mantener DepSentinel, de dónde sale el dinero y en qué se gasta. Las donaciones nunca desbloquean funciones.</p>
+  </div>
+</header>
+
+<main>
+  <section aria-labelledby="t-reglas">
+    <div class="wrap">
+      <h2 id="t-reglas">Las reglas</h2>
+      <ul class="rules">
+        <li><strong>Nada se desbloquea con dinero</strong><span>Todas las funciones son gratuitas para todo el mundo. Donar o patrocinar no da acceso a reglas, formatos ni integraciones que los demás no tengan.</span></li>
+        <li><strong>Las cuentas son públicas</strong><span>Cada mes se publica cuánto ha entrado y en qué se ha gastado. El detalle está en esta página y el histórico, en el repositorio.</span></li>
+        <li><strong>Las empresas pueden patrocinar</strong><span>Pueden aparecer como patrocinadoras si quieren, pero no reciben prioridad en incidencias, ni cambios a medida, ni voto sobre las reglas de detección.</span></li>
+        <li><strong>Si sobra dinero, se invierte en el proyecto</strong><span>Primero en mantenimiento y después en auditorías de seguridad independientes del código y de la cadena de releases. Las decisiones de gasto se discuten en abierto.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="accounts" aria-labelledby="t-cuentas">
+    <div class="wrap">
+      <h2 id="t-cuentas">Las cuentas</h2>
+      <div id="accounts"><noscript>Activa JavaScript para ver la tabla. Los mismos datos están en el repositorio, en docs/transparencia.md.</noscript></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="t-gasto">
+    <div class="wrap">
+      <h2 id="t-gasto">En qué se gasta</h2>
+      <ul class="spend">
+        <li>Dominio y alojamiento de esta página y del feed de la base de datos de paquetes maliciosos.</li>
+        <li>Auditorías de seguridad independientes del código, de las firmas y del proceso de publicación de versiones.</li>
+        <li>Herramientas necesarias para publicar de forma reproducible y verificable (firmas, atestaciones de las releases).</li>
+        <li>Horas de mantenimiento, solo cuando hay fondos suficientes y tras discutirlo en abierto.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="give" aria-labelledby="t-donar">
+    <div class="wrap">
+      <h2 id="t-donar">Si quieres ayudar</h2>
+      <p>Es opcional. Una estrella, un informe de falso positivo o una regla nueva ayudan tanto como el dinero.</p>
+      <div class="links">
+        <a class="btn solid" href="https://github.com/sponsors/AlejandroMolines">GitHub Sponsors</a>
+        <a class="btn ghost" href="https://opencollective.com/depsentinel">Open Collective</a>
+        <a class="btn ghost" href="https://ko-fi.com/AlejandroMolines">Ko-fi</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a href="index.html">Volver al inicio</a>
+    <a href="https://github.com/AlejandroMolines/depsentinel/blob/main/docs/transparencia.md">Histórico en el repositorio</a>
+    <a href="https://github.com/AlejandroMolines/depsentinel">Código</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var L = {"empty_t": "Todavía no hay movimientos", "empty_p": "No se ha recibido ninguna donación ni se ha gastado nada. El primer informe se publicará el mes siguiente al primer ingreso.", "received": "Recibido en total", "spent": "Gastado en total", "balance": "Saldo disponible", "cols": ["Mes", "Donaciones", "Patrocinios", "Gastos", "Saldo del mes", "Saldo acumulado", "Notas"], "updated": "Última actualización: ", "failed": "No se pudieron cargar las cuentas. Si abres este fichero directamente desde el disco, sírvelo con un servidor local (por ejemplo, python3 -m http.server)."};
+  var LOCALE = 'es';
+  document.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('ds-lang', a.getAttribute('data-lang')); } catch (e) { /* nothing */ } });
+  });
+  var host = document.getElementById('accounts');
+  function h(tag, text, cls) { var el = document.createElement(tag); if (text != null) el.textContent = text; if (cls) el.className = cls; return el; }
+  function render(data) {
+    var cur = (data && data.currency) || 'EUR';
+    var money = new Intl.NumberFormat(LOCALE, { style: 'currency', currency: cur });
+    var months = ((data && data.months) || []).slice().sort(function (a, b) { return a.month < b.month ? -1 : 1; });
+    if (!months.length) {
+      var box = h('div', null, 'empty');
+      box.appendChild(h('strong', L.empty_t));
+      box.appendChild(h('p', L.empty_p));
+      host.appendChild(box);
+      return;
+    }
+    function sum(o) { return Object.keys(o || {}).reduce(function (a, k) { return a + (+o[k] || 0); }, 0); }
+    var income = 0, costs = 0;
+    months.forEach(function (m) { income += (+m.donations || 0) + (+m.sponsorships || 0); costs += sum(m.costs); });
+    var dl = h('dl', null, 'totals');
+    [[L.received, money.format(income)], [L.spent, money.format(costs)], [L.balance, money.format(income - costs)]].forEach(function (r) {
+      var d = h('div'); d.appendChild(h('dt', r[0])); d.appendChild(h('dd', r[1])); dl.appendChild(d);
+    });
+    host.appendChild(dl);
+    var wrap = h('div', null, 'tablewrap');
+    var t = h('table');
+    var head = h('tr');
+    L.cols.forEach(function (c, i) { var th = h('th', c); if (i === 6) th.style.textAlign = 'left'; head.appendChild(th); });
+    var thead = h('thead'); thead.appendChild(head); t.appendChild(thead);
+    var tb = h('tbody');
+    var acc = 0;
+    var fmtMonth = new Intl.DateTimeFormat(LOCALE, { month: 'long', year: 'numeric', timeZone: 'UTC' });
+    var rows = months.map(function (m) {
+      var inc = (+m.donations || 0) + (+m.sponsorships || 0), cost = sum(m.costs);
+      acc += inc - cost;
+      return { m: m, cost: cost, bal: inc - cost, acc: acc };
+    }).reverse();
+    rows.forEach(function (r) {
+      var tr = h('tr');
+      var d = new Date(r.m.month + '-01T00:00:00Z');
+      tr.appendChild(h('td', isNaN(d) ? r.m.month : fmtMonth.format(d)));
+      tr.appendChild(h('td', money.format(+r.m.donations || 0)));
+      tr.appendChild(h('td', money.format(+r.m.sponsorships || 0)));
+      tr.appendChild(h('td', money.format(r.cost)));
+      tr.appendChild(h('td', money.format(r.bal), r.bal < 0 ? 'neg' : ''));
+      tr.appendChild(h('td', money.format(r.acc), r.acc < 0 ? 'neg' : ''));
+      tr.appendChild(h('td', r.m.note || '', 'note'));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb); wrap.appendChild(t); host.appendChild(wrap);
+    if (data.updated) host.appendChild(h('p', L.updated + data.updated + '.'));
+  }
+  fetch('transparency-data.json', { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(render)
+    .catch(function () { host.appendChild(h('p', L.failed)); });
+})();
+</script>
+</body>
+</html>

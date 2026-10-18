@@ -1,0 +1,360 @@
+{
+  "schema": 1,
+  "description": "Excepciones integradas. Silencian solo el aviso informativo «install-script» de paquetes cuyo script de instalación es esperable; nunca ocultan patrones peligrosos (regla suspicious-script).",
+  "entries": [
+    {
+      "ecosystem": "npm",
+      "name": "esbuild",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/*",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "sharp",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "bcrypt",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "sqlite3",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "better-sqlite3",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "canvas",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "fsevents",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "core-js",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "core-js-pure",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "protobufjs",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "puppeteer",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "cypress",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "electron",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@swc/core",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "nx",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@parcel/watcher",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "msgpackr-extract",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lmdb",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@prisma/client",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "prisma",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@prisma/engines",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "husky",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "es5-ext",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "bufferutil",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "utf-8-validate",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "cpu-features",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "ssh2",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "deasync",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "node-sass",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "grpc",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "re2",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "leveldown",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "unrs-resolver",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@sentry/cli",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "playwright",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "chromedriver",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "geckodriver",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "fibers",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "ffi-napi",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "sodium-native",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "argon2",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "keytar",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "serialport",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@serialport/bindings-cpp",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "usb",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "node-pty",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "drivelist",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "tree-sitter",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "dtrace-provider",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "microtime",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "ref-napi",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "edgedriver",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "sass-embedded",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lightningcss",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@biomejs/biome",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "msw",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "simple-git-hooks",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lefthook",
+      "rule": "install-script",
+      "reason": "Script de instalación esperado (compila o descarga un binario nativo)"
+    }
+  ]
+}
