@@ -60,20 +60,20 @@ func (a *App) cmdInit(args []string) error {
 	if len(pos) == 1 {
 		dir = pos[0]
 	} else if len(pos) > 1 {
-		return usageErr("demasiados argumentos: %v", pos[1:])
+		return usageErr("too many arguments: %v", pos[1:])
 	}
 	if st, err := os.Stat(dir); err != nil || !st.IsDir() {
-		return usageErr("%s no es un directorio", dir)
+		return usageErr("%s is not a directory", dir)
 	}
 	cfgPath := filepath.Join(dir, config.FileName)
 	cfg := config.Default()
 	if _, err := os.Stat(cfgPath); err == nil && !*force {
-		fmt.Fprintf(a.Stdout, "Ya existe %s (usa --force para sobrescribirlo).\n", cfgPath)
+		fmt.Fprintf(a.Stdout, "Already exists %s (use --force to overwrite).\n", cfgPath)
 	} else {
 		if err := cfg.Save(cfgPath); err != nil {
 			return err
 		}
-		fmt.Fprintf(a.Stdout, "Creado %s\n", cfgPath)
+		fmt.Fprintf(a.Stdout, "Created %s\n", cfgPath)
 	}
 	alPath := filepath.Join(dir, cfg.AllowlistFile)
 	if _, err := os.Stat(alPath); err != nil {
@@ -81,12 +81,12 @@ func (a *App) cmdInit(args []string) error {
 		if err := l.Save(); err != nil {
 			return err
 		}
-		fmt.Fprintf(a.Stdout, "Creado %s (lista blanca vacía: cada excepción exige una justificación)\n", alPath)
+		fmt.Fprintf(a.Stdout, "Created %s (empty allowlist: every exception requires a justification)\n", alPath)
 	}
 	if *workflow {
 		wf := filepath.Join(dir, ".github", "workflows", "depsentinel.yml")
 		if _, err := os.Stat(wf); err == nil && !*force {
-			fmt.Fprintf(a.Stdout, "Ya existe %s\n", wf)
+			fmt.Fprintf(a.Stdout, "Already exists %s\n", wf)
 		} else {
 			if err := os.MkdirAll(filepath.Dir(wf), 0o755); err != nil {
 				return err
@@ -94,14 +94,14 @@ func (a *App) cmdInit(args []string) error {
 			if err := os.WriteFile(wf, []byte(workflowTemplate), 0o644); err != nil {
 				return err
 			}
-			fmt.Fprintf(a.Stdout, "Creado %s\n", wf)
+			fmt.Fprintf(a.Stdout, "Created %s\n", wf)
 		}
 	}
 	files, err := scanner.Detect(dir, cfg.IgnorePaths)
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(a.Stdout, "\nManifiestos detectados:")
+	fmt.Fprintln(a.Stdout, "\nManifests detected:")
 	found := false
 	for _, eco := range model.AllEcosystems {
 		if len(files[eco]) > 0 {
@@ -110,9 +110,9 @@ func (a *App) cmdInit(args []string) error {
 		}
 	}
 	if !found {
-		fmt.Fprintln(a.Stdout, "  (ninguno todavía)")
+		fmt.Fprintln(a.Stdout, "  (none yet)")
 	}
-	fmt.Fprintln(a.Stdout, "\nSiguiente paso:  depsentinel scan")
+	fmt.Fprintln(a.Stdout, "\nNext step:  depsentinel scan")
 	return nil
 }
 
@@ -137,7 +137,7 @@ func (a *App) cmdFix(ctx context.Context, args []string) error {
 	if len(pos) == 1 {
 		dir = pos[0]
 	} else if len(pos) > 1 {
-		return usageErr("demasiados argumentos: %v", pos[1:])
+		return usageErr("too many arguments: %v", pos[1:])
 	}
 	setup, err := a.prepare(&f, dir, false)
 	if err != nil {
@@ -169,7 +169,7 @@ func (a *App) cmdFix(ctx context.Context, args []string) error {
 		fmt.Fprintf(a.Stdout, "Ficheros modificados: %s\n", strings.Join(changed, ", "))
 		for _, c := range changed {
 			if filepath.Base(c) == "package.json" {
-				fmt.Fprintln(a.Stdout, "Siguiente paso: npm install (regenera el lockfile) y vuelve a ejecutar depsentinel scan.")
+				fmt.Fprintln(a.Stdout, "Next step: npm install (regenerates the lockfile) and run depsentinel scan again.")
 				break
 			}
 		}
@@ -189,7 +189,7 @@ func (a *App) allowlistPath(dir, cfgFlag string) (string, *config.Config, error)
 	if cfgPath != "" {
 		c, err := config.Load(cfgPath)
 		if err != nil {
-			return "", nil, usageErr("configuración inválida: %v", err)
+			return "", nil, usageErr("invalid configuration: %v", err)
 		}
 		cfg, base = c, filepath.Dir(cfgPath)
 	}
@@ -218,7 +218,7 @@ func (a *App) cmdAllowlist(args []string) error {
 	eco := fs.String("ecosystem", "", "ecosistema (npm, pypi, go, docker, actions); por defecto cualquiera")
 	ver := fs.String("version", "", "versión concreta (por defecto todas)")
 	rule := fs.String("rule", "", "regla concreta, p. ej. typosquat (por defecto todas salvo malicious)")
-	reason := fs.String("reason", "", "justificación OBLIGATORIA: por qué es seguro ignorar este hallazgo")
+	reason := fs.String("reason", "", "REQUIRED justification: why it is safe to ignore this finding")
 	expires := fs.String("expires", "", "caducidad AAAA-MM-DD (recomendado)")
 	pos, err := parseInterspersed(fs, rest)
 	if err != nil {
@@ -230,12 +230,12 @@ func (a *App) cmdAllowlist(args []string) error {
 	}
 	l, err := allowlist.Load(path)
 	if err != nil {
-		return usageErr("lista blanca inválida: %v", err)
+		return usageErr("invalid allowlist: %v", err)
 	}
 	switch sub {
 	case "list":
 		if len(l.Entries) == 0 {
-			fmt.Fprintf(a.Stdout, "La lista blanca está vacía (%s).\n", path)
+			fmt.Fprintf(a.Stdout, "Allowlist is empty (%s).\n", path)
 			return nil
 		}
 		tw := tabwriter.NewWriter(a.Stdout, 0, 2, 2, ' ', 0)
@@ -270,7 +270,7 @@ func (a *App) cmdAllowlist(args []string) error {
 		if *eco != "" && *eco != "*" {
 			e, ok := model.ParseEcosystem(*eco)
 			if !ok {
-				return usageErr("ecosistema desconocido %q", *eco)
+				return usageErr("unknown ecosystem %q", *eco)
 			}
 			*eco = string(e)
 		}
@@ -282,7 +282,7 @@ func (a *App) cmdAllowlist(args []string) error {
 				}
 			}
 			if !known && !strings.HasPrefix(*rule, "GHSA-") && !strings.HasPrefix(*rule, "CVE-") && !strings.HasPrefix(*rule, "DS-") && !strings.HasPrefix(*rule, "MAL-") {
-				return usageErr("regla desconocida %q (reglas: %s; también puedes usar el ID de un aviso, p. ej. GHSA-…)", *rule, strings.Join(config.SortedRules(), ", "))
+				return usageErr("unknown rule %q (rules: %s; you can also use an advisory ID, e.g. GHSA-…)", *rule, strings.Join(config.SortedRules(), ", "))
 			}
 		}
 		if sub == "add" {
@@ -339,7 +339,7 @@ func (a *App) cmdSBOM(args []string) error {
 	if len(pos) == 1 {
 		dir = pos[0]
 	} else if len(pos) > 1 {
-		return usageErr("demasiados argumentos: %v", pos[1:])
+		return usageErr("too many arguments: %v", pos[1:])
 	}
 	f := scanFlags{format: "table", minSev: "low", ecosystem: *eco, lock: *lock, prodOnly: *prod, configPath: *cfgFlag, quiet: true}
 	setup, err := a.prepare(&f, dir, false)
@@ -407,7 +407,7 @@ func (a *App) cmdReport(ctx context.Context, args []string) error {
 		if len(pos) == 1 {
 			dir = pos[0]
 		} else if len(pos) > 1 {
-			return usageErr("demasiados argumentos: %v", pos[1:])
+			return usageErr("too many arguments: %v", pos[1:])
 		}
 		setup, err := a.prepare(&f, dir, false)
 		if err != nil {
@@ -458,7 +458,7 @@ func (a *App) cmdDB(ctx context.Context, args []string) error {
 	if cfgPath != "" {
 		c, err := config.Load(cfgPath)
 		if err != nil {
-			return usageErr("configuración inválida: %v", err)
+			return usageErr("invalid configuration: %v", err)
 		}
 		cfg = c
 	}

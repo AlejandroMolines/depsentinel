@@ -42,33 +42,34 @@ type App struct {
 	Stdin  io.Reader
 }
 
-const rootHelp = `DepSentinel %s — escanea tus dependencias antes de instalar o desplegar.
+const rootHelp = `DepSentinel %s — scan your dependencies before install or deploy.
 
-Uso:
-  depsentinel <comando> [opciones]
+Usage:
+  depsentinel <command> [options]
 
-Comandos:
-  init        Crea .depsentinel.json y la lista blanca en el proyecto
-  scan        Escanea dependencias (npm, PyPI, Go, Docker, GitHub Actions)
-  audit       Como scan, pero muestra solo las severidades pedidas (por defecto alto y crítico)
-  fix         Propone o aplica arreglos (--dry-run para solo ver el plan)
-  allowlist   Gestiona la lista blanca con justificación (add, list, remove)
-  sbom        Genera un SBOM CycloneDX
-  report      Genera el panel HTML (--html) de un escaneo o de un informe JSON
-  db          Base de datos local: update, status, clean
-  guard       Intercepta una instalación (npm/yarn/pnpm): genera el lockfile sin scripts, escanea y solo entonces instala
-  version     Muestra la versión
+Commands:
+  init        Create .depsentinel.json and the allowlist in the project
+  scan        Scan dependencies (npm, PyPI, Go, Docker, GitHub Actions)
+  audit       Like scan, but shows only the requested severities (default high and critical)
+  fix         Propose or apply fixes (--dry-run to preview the plan)
+  allowlist   Manage the allowlist with justification (add, list, remove)
+  sbom        Generate a CycloneDX SBOM
+  report      Generate the HTML panel (--html) from a scan or a JSON report
+  db          Local database: update, status, clean
+  guard       Intercept an install (npm/yarn/pnpm): build the lockfile without scripts, scan, then install
+  version     Show the version
 
-Ejemplos:
+Examples:
   depsentinel scan
   depsentinel scan --ci --fail-on high
   depsentinel scan --ecosystem npm --lock package-lock.json --format json --output report.json
-  depsentinel allowlist add lodash --reason "revisado manualmente"
+  depsentinel allowlist add lodash --reason "manually reviewed"
   depsentinel sbom --format cyclonedx --output sbom.json
   depsentinel report --html --open
+  depsentinel guard npm install
 
-Códigos de salida: 0 correcto · 1 hallazgos sobre el umbral · 2 uso incorrecto · 3 análisis incompleto (--strict) o error.
-Usa "depsentinel <comando> -h" para ver las opciones de cada comando.
+Exit codes: 0 ok · 1 findings above threshold · 2 usage error · 3 incomplete analysis (--strict) or runtime error.
+Use "depsentinel <command> -h" for the options of each command.
 `
 
 // Run ejecuta la CLI y devuelve el código de salida.
@@ -113,7 +114,7 @@ func (a *App) Run(ctx context.Context, args []string) int {
 	case "guard":
 		err = a.cmdGuard(ctx, rest)
 	default:
-		fmt.Fprintf(a.Stderr, "Comando desconocido: %q\n\n", cmd)
+		fmt.Fprintf(a.Stderr, "Unknown command: %q\n\n", cmd)
 		fmt.Fprintf(a.Stderr, rootHelp, version.Version)
 		return ExitUsage
 	}

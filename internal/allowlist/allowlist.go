@@ -80,7 +80,7 @@ func (e Entry) Validate() error {
 		return errors.New("falta el nombre del paquete")
 	}
 	if strings.TrimSpace(e.Reason) == "" {
-		return errors.New("falta la justificación (reason): toda excepción debe explicar por qué es segura")
+		return errors.New("missing justification (reason): every exception must explain why it is safe")
 	}
 	if e.Ecosystem != "" && e.Ecosystem != "*" {
 		if _, ok := model.ParseEcosystem(e.Ecosystem); !ok {

@@ -71,6 +71,7 @@ func BuildPlan(ctx context.Context, o Options, res *engine.Result) (*Plan, error
 	rep, inv := res.Report, res.Inventory
 	planNPM(o, plan, rep, inv)
 	planPyPI(plan, rep)
+	planPyPIUnpinned(plan, rep)
 	planGo(plan, rep)
 	planActions(ctx, o, plan, rep)
 	planDocker(plan, rep)
@@ -279,6 +280,38 @@ func planPyPI(plan *Plan, rep *model.Report) {
 		v := edits[k]
 		plan.Edits = append(plan.Edits, Action{Kind: "bump-requirement", Ecosystem: model.PyPI, Package: k.name, From: v.from,
 			To: maxVersion(model.PyPI, v.fixes), File: k.file, Line: k.line, Advisory: strings.Join(v.ids, ", ")})
+	}
+}
+
+// planPyPIUnpinned propone generar un lockfile para las dependencias PyPI sin versión exacta.
+func planPyPIUnpinned(plan *Plan, rep *model.Report) {
+	seen := map[string]bool{}
+	for _, f := range rep.Findings {
+		if f.Ecosystem != model.PyPI || f.Rule != "unpinned" {
+			continue
+		}
+		base := strings.ToLower(path.Base(f.Source))
+		if seen[base] {
+			continue
+		}
+		seen[base] = true
+		cmd := "pip-compile --generate-hashes requirements.in"
+		note := "Generate a lockfile with exact versions and hashes, then scan it."
+		switch base {
+		case "pyproject.toml":
+			cmd = "poetry lock"
+			note = "Generate poetry.lock and scan it."
+		case "uv.lock":
+			cmd = "uv lock"
+			note = "Generate uv.lock and scan it."
+		case "pipfile":
+			cmd = "pipenv lock"
+			note = "Generate Pipfile.lock and scan it."
+		}
+		plan.Manual = append(plan.Manual, Action{
+			Kind: "manual", Ecosystem: model.PyPI, Package: f.Package, File: f.Source,
+			Command: cmd, Advisory: f.ID, Note: note,
+		})
 	}
 }
 

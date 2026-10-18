@@ -150,8 +150,8 @@ func Unpinned(c *Context, p *model.Package) []model.Finding {
 	if !p.Unpinned || p.Private || !c.enabled("unpinned") {
 		return nil
 	}
-	f := newFinding(p, "unpinned", "DS-UNPINNED", model.SeverityLow, "Dependencia sin versión exacta fijada")
-	f.Detail = "Sin versión exacta no se pueden consultar avisos de seguridad ni garantizar que cada instalación trae el mismo código."
-	f.Fix = "Genera un fichero de bloqueo (pip-compile --generate-hashes, poetry lock o uv lock) y escanéalo."
+	f := newFinding(p, "unpinned", "DS-UNPINNED", model.SeverityLow, "Dependency without an exact pinned version")
+	f.Detail = "Without an exact version, security advisories cannot be queried and each install may bring different code."
+	f.Fix = "Generate a lockfile (pip-compile --generate-hashes, poetry lock or uv lock) and scan it."
 	return []model.Finding{f}
 }

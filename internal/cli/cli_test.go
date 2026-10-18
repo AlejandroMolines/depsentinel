@@ -45,10 +45,10 @@ func TestBasics(t *testing.T) {
 	if code, out, _ := run(t, "version"); code != 0 || !strings.Contains(out, "depsentinel") {
 		t.Errorf("version: %d %q", code, out)
 	}
-	if code, out, _ := run(t, "help"); code != 0 || !strings.Contains(out, "Comandos:") {
+	if code, out, _ := run(t, "help"); code != 0 || !strings.Contains(out, "Commands:") {
 		t.Errorf("help: %d", code)
 	}
-	if code, _, errb := run(t, "no-existe"); code != ExitUsage || !strings.Contains(errb, "desconocido") {
+	if code, _, errb := run(t, "no-existe"); code != ExitUsage || !strings.Contains(errb, "Unknown") {
 		t.Errorf("comando desconocido: %d %q", code, errb)
 	}
 	if code, _, _ := run(t); code != ExitUsage {
@@ -74,10 +74,10 @@ func TestScanExitCodes(t *testing.T) {
 	if code, _, errb := run(t, "scan", dir, "--fail-on", "raro"); code != ExitUsage || !strings.Contains(errb, "severity") {
 		t.Errorf("severidad inválida: %d %q", code, errb)
 	}
-	if code, _, errb := run(t, "scan", dir, "--ecosystem", "pypi"); code != ExitUsage || !strings.Contains(errb, "no se encontraron manifiestos") {
+	if code, _, errb := run(t, "scan", dir, "--ecosystem", "pypi"); code != ExitUsage || !strings.Contains(errb, "no manifests found") {
 		t.Errorf("ecosistema sin manifiestos: %d %q", code, errb)
 	}
-	if code, _, errb := run(t, "scan", dir, "--format", "xml"); code != ExitUsage || !strings.Contains(errb, "formato") {
+	if code, _, errb := run(t, "scan", dir, "--format", "xml"); code != ExitUsage || !strings.Contains(errb, "format") {
 		t.Errorf("formato inválido: %d %q", code, errb)
 	}
 	if code, _, _ := run(t, "audit", dir); code != ExitFindings {
@@ -120,7 +120,7 @@ func TestScanJSONAndOutputFile(t *testing.T) {
 
 func TestAllowlistFlow(t *testing.T) {
 	dir := setup(t)
-	if code, _, errb := run(t, "allowlist", "add", "lodash", "--dir", dir); code != ExitUsage || !strings.Contains(errb, "justificación") {
+	if code, _, errb := run(t, "allowlist", "add", "lodash", "--dir", dir); code != ExitUsage || !strings.Contains(errb, "justification") {
 		t.Errorf("sin motivo: %d %q", code, errb)
 	}
 	if code, out, _ := run(t, "allowlist", "add", "event-stream", "--reason", "genérica", "--dir", dir); code != 0 || !strings.Contains(out, "Añadido") {
@@ -151,7 +151,7 @@ func TestAllowlistFlow(t *testing.T) {
 		t.Errorf("remove inexistente: %d %q", code, errb)
 	}
 	if code, _, _ := run(t, "allowlist", "add", "x", "--rule", "regla-inventada", "--reason", "r", "--dir", dir); code != ExitUsage {
-		t.Error("regla desconocida")
+		t.Error("unknown rule")
 	}
 }
 
@@ -168,7 +168,7 @@ func TestInit(t *testing.T) {
 			t.Errorf("falta %s", f)
 		}
 	}
-	if _, out, _ := run(t, "init", dir); !strings.Contains(out, "Ya existe") {
+	if _, out, _ := run(t, "init", dir); !strings.Contains(out, "Already exists") {
 		t.Errorf("segunda ejecución: %q", out)
 	}
 	// la configuración generada es válida y se usa
@@ -176,7 +176,7 @@ func TestInit(t *testing.T) {
 		t.Errorf("scan con la configuración generada: %d", code)
 	}
 	_ = os.WriteFile(filepath.Join(dir, ".depsentinel.json"), []byte(`{"fail_on":"critical","disabled_rules":["no-existe"]}`), 0o644)
-	if code, _, errb := run(t, "scan", dir, "--offline"); code != ExitUsage || !strings.Contains(errb, "regla desconocida") {
+	if code, _, errb := run(t, "scan", dir, "--offline"); code != ExitUsage || !strings.Contains(errb, "unknown rule") {
 		t.Errorf("configuración inválida: %d %q", code, errb)
 	}
 }

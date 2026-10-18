@@ -118,7 +118,7 @@ func (c *Config) Validate() error {
 	}
 	for _, r := range c.DisabledRules {
 		if !known[r] {
-			return fmt.Errorf("disabled_rules: regla desconocida %q (reglas válidas: %s)", r, strings.Join(KnownRules, ", "))
+			return fmt.Errorf("disabled_rules: unknown rule %q (valid rules: %s)", r, strings.Join(KnownRules, ", "))
 		}
 	}
 	if c.Network.TimeoutSeconds <= 0 || c.Network.TimeoutSeconds > 300 {

@@ -18,7 +18,7 @@ func finding(eco model.Ecosystem, name, version, rule string) model.Finding {
 
 func TestAddValidateAndMatch(t *testing.T) {
 	l := &List{Path: filepath.Join(t.TempDir(), ".depsentinel", "allowlist.json")}
-	if err := l.Add(Entry{Name: "lodash"}); err == nil || !strings.Contains(err.Error(), "justificación") {
+	if err := l.Add(Entry{Name: "lodash"}); err == nil || !strings.Contains(err.Error(), "justification") {
 		t.Errorf("sin motivo debe fallar: %v", err)
 	}
 	if err := l.Add(Entry{Name: "event-stream", Rule: "malicious", Reason: "x"}); err == nil {

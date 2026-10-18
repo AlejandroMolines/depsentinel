@@ -49,34 +49,34 @@ func (f *scanFlags) register(fs interface {
 	StringVar(*string, string, string, string)
 	BoolVar(*bool, string, bool, string)
 }, audit bool) {
-	fs.StringVar(&f.ecosystem, "ecosystem", "auto", "ecosistemas a analizar: auto o lista (npm,pypi,go,docker,actions)")
-	fs.StringVar(&f.ecosystem, "e", "auto", "alias de --ecosystem")
-	fs.StringVar(&f.lock, "lock", "", "lockfile de npm a usar en lugar de detectarlo (p. ej. package-lock.json)")
-	fs.StringVar(&f.format, "format", "table", "formato de salida: table, json, markdown, github")
-	fs.StringVar(&f.format, "f", "table", "alias de --format")
-	fs.StringVar(&f.output, "output", "", "escribe el resultado en este fichero en lugar de la salida estándar")
-	fs.StringVar(&f.output, "o", "", "alias de --output")
-	fs.BoolVar(&f.ci, "ci", false, "modo CI: sin colores, anotaciones de GitHub y falla si hay riesgo >= --fail-on (por defecto high)")
-	fs.StringVar(&f.failOn, "fail-on", "", "severidad mínima que hace fallar el comando: low, medium, high, critical o none")
+	fs.StringVar(&f.ecosystem, "ecosystem", "auto", "ecosystems to analyze: auto or list (npm,pypi,go,docker,actions)")
+	fs.StringVar(&f.ecosystem, "e", "auto", "alias of --ecosystem")
+	fs.StringVar(&f.lock, "lock", "", "npm lockfile to use instead of auto-detecting (e.g. package-lock.json)")
+	fs.StringVar(&f.format, "format", "table", "output format: table, json, markdown, github")
+	fs.StringVar(&f.format, "f", "table", "alias of --format")
+	fs.StringVar(&f.output, "output", "", "write the result to this file instead of stdout")
+	fs.StringVar(&f.output, "o", "", "alias of --output")
+	fs.BoolVar(&f.ci, "ci", false, "CI mode: no colors, GitHub annotations and fail if risk >= --fail-on (default high)")
+	fs.StringVar(&f.failOn, "fail-on", "", "minimum severity that fails the command: low, medium, high, critical or none")
 	defOnly := ""
 	if audit {
 		defOnly = "high,critical"
 	}
-	fs.StringVar(&f.only, "only", defOnly, "muestra solo estas severidades (p. ej. high,critical)")
-	fs.StringVar(&f.minSev, "min-severity", "low", "no muestra hallazgos por debajo de esta severidad")
-	fs.BoolVar(&f.offline, "offline", false, "no usa la red: solo reglas locales")
-	fs.BoolVar(&f.noRegistry, "no-registry", false, "no consulta los registries (npm, PyPI, proxy de Go)")
-	fs.BoolVar(&f.noOSV, "no-osv", false, "no consulta OSV")
-	fs.BoolVar(&f.deep, "deep", false, "descarga e inspecciona los paquetes npm con scripts de instalación (más lento)")
-	fs.BoolVar(&f.prodOnly, "prod-only", false, "ignora las dependencias de desarrollo")
-	fs.StringVar(&f.configPath, "config", "", "ruta de .depsentinel.json (por defecto se busca en el proyecto)")
-	fs.BoolVar(&f.noColor, "no-color", false, "desactiva los colores")
-	fs.BoolVar(&f.quiet, "quiet", false, "no muestra el progreso")
-	fs.BoolVar(&f.quiet, "q", false, "alias de --quiet")
-	fs.BoolVar(&f.strict, "strict", false, "falla (código 3) si alguna fuente de datos no estuvo disponible")
-	fs.BoolVar(&f.showAllow, "show-allowed", false, "incluye en la salida los hallazgos de la lista blanca")
-	fs.StringVar(&f.outMD, "output-markdown", "", "escribe además el comentario de PR (Markdown) en este fichero")
-	fs.StringVar(&f.outHTML, "output-html", "", "escribe además el panel HTML en este fichero")
+	fs.StringVar(&f.only, "only", defOnly, "show only these severities (e.g. high,critical)")
+	fs.StringVar(&f.minSev, "min-severity", "low", "hide findings below this severity")
+	fs.BoolVar(&f.offline, "offline", false, "no network: local rules only")
+	fs.BoolVar(&f.noRegistry, "no-registry", false, "do not query registries (npm, PyPI, Go proxy)")
+	fs.BoolVar(&f.noOSV, "no-osv", false, "do not query OSV")
+	fs.BoolVar(&f.deep, "deep", false, "download and inspect npm packages with install scripts (slower)")
+	fs.BoolVar(&f.prodOnly, "prod-only", false, "ignore development dependencies")
+	fs.StringVar(&f.configPath, "config", "", "path to .depsentinel.json (searched in the project by default)")
+	fs.BoolVar(&f.noColor, "no-color", false, "disable colors")
+	fs.BoolVar(&f.quiet, "quiet", false, "hide progress")
+	fs.BoolVar(&f.quiet, "q", false, "alias of --quiet")
+	fs.BoolVar(&f.strict, "strict", false, "fail (code 3) if a data source was unavailable")
+	fs.BoolVar(&f.showAllow, "show-allowed", false, "include allowlisted findings in the output")
+	fs.StringVar(&f.outMD, "output-markdown", "", "also write the PR comment (Markdown) to this file")
+	fs.StringVar(&f.outHTML, "output-html", "", "also write the HTML panel to this file")
 }
 
 type scanSetup struct {
@@ -99,7 +99,7 @@ func (a *App) prepare(f *scanFlags, dir string, ciDefault bool) (*scanSetup, err
 	if cfgPath != "" {
 		c, err := config.Load(cfgPath)
 		if err != nil {
-			return nil, usageErr("configuración inválida: %v", err)
+			return nil, usageErr("invalid configuration: %v", err)
 		}
 		cfg = c
 	} else if f.configPath != "" {
@@ -112,7 +112,7 @@ func (a *App) prepare(f *scanFlags, dir string, ciDefault bool) (*scanSetup, err
 		for _, s := range splitCSV(f.ecosystem) {
 			e, ok := model.ParseEcosystem(s)
 			if !ok {
-				return nil, usageErr("ecosistema desconocido %q (usa: npm, pypi, go, docker, actions)", s)
+				return nil, usageErr("unknown ecosystem %q (use: npm, pypi, go, docker, actions)", s)
 			}
 			ecos = append(ecos, e)
 		}
@@ -139,7 +139,7 @@ func (a *App) prepare(f *scanFlags, dir string, ciDefault bool) (*scanSetup, err
 	switch f.format {
 	case "table", "json", "markdown", "md", "github":
 	default:
-		return nil, usageErr("formato desconocido %q (usa: table, json, markdown, github)", f.format)
+		return nil, usageErr("unknown format %q (use: table, json, markdown, github)", f.format)
 	}
 
 	alPath := cfg.AllowlistFile
@@ -155,7 +155,7 @@ func (a *App) prepare(f *scanFlags, dir string, ciDefault bool) (*scanSetup, err
 	}
 	al, err := allowlist.Load(alPath)
 	if err != nil {
-		return nil, usageErr("lista blanca inválida: %v", err)
+		return nil, usageErr("invalid allowlist: %v", err)
 	}
 
 	cch := cache.Default()
@@ -191,7 +191,7 @@ func (a *App) cmdScan(ctx context.Context, args []string, audit bool) error {
 		return err
 	}
 	if len(pos) > 1 {
-		return usageErr("demasiados argumentos: %v", pos[1:])
+		return usageErr("too many arguments: %v", pos[1:])
 	}
 	dir := "."
 	if len(pos) == 1 {
@@ -219,7 +219,7 @@ func (a *App) cmdScan(ctx context.Context, args []string, audit bool) error {
 	}
 	rep := res.Report
 	if setup.ecoFlag && len(rep.Ecosystems) == 0 {
-		return usageErr("no se encontraron manifiestos para %s en %s", f.ecosystem, dir)
+		return usageErr("no manifests found for %s in %s", f.ecosystem, dir)
 	}
 	if f.showAllow {
 		rep.Findings = append(rep.Findings, rep.Suppressed...)
@@ -272,7 +272,7 @@ func (a *App) cmdScan(ctx context.Context, args []string, audit bool) error {
 		fmt.Fprintf(a.Stderr, "Hecho en %s\n", engine.Elapsed(start))
 	}
 	if f.strict && rep.Incomplete {
-		return &exitError{code: ExitIncomplete, msg: "análisis incompleto (--strict): alguna fuente de datos no estuvo disponible"}
+		return &exitError{code: ExitIncomplete, msg: "incomplete analysis (--strict): a data source was unavailable"}
 	}
 	// --only también acota lo que cuenta para el umbral: lo que no se muestra no hace fallar
 	if setup.failOn > model.SeverityNone && len(report.Filter(rep.Findings, setup.failOn, setup.only)) > 0 {
