@@ -56,7 +56,7 @@ func queryOSV(ctx context.Context, o *Options, pkgs []*model.Package) (map[strin
 	if len(queries) == 0 {
 		return out, nil, false
 	}
-	o.Log("Consultando OSV (%d paquetes)…", len(queries))
+	o.Log("Querying OSV (%d packages)…", len(queries))
 	client := osv.New(o.HTTP, o.Endpoints.OSV, o.Cache)
 	client.Workers = o.Config.Network.Concurrency
 	refs, err := client.QueryBatch(ctx, queries)
@@ -132,7 +132,7 @@ func enrich(ctx context.Context, o *Options, pkgs []*model.Package) ([]string, b
 		}
 	}
 	if len(npmPkgs) > 0 {
-		o.Log("Consultando el registry de npm (%d paquetes)…", len(npmPkgs))
+		o.Log("Querying the npm registry (%d packages)…", len(npmPkgs))
 		client := registry.NewNPM(o.HTTP, o.Endpoints.NPM, o.Cache)
 		type group struct {
 			name     string
@@ -215,7 +215,7 @@ func enrich(ctx context.Context, o *Options, pkgs []*model.Package) ([]string, b
 		}
 	}
 	if len(pyPkgs) > 0 {
-		o.Log("Consultando PyPI (%d paquetes)…", len(pyPkgs))
+		o.Log("Querying PyPI (%d packages)…", len(pyPkgs))
 		client := registry.NewPyPI(o.HTTP, o.Endpoints.PyPI, o.Cache)
 		var ec errCollector
 		workpool.ForEach(ctx, workers, len(pyPkgs), func(ctx context.Context, i int) {
@@ -240,7 +240,7 @@ func enrich(ctx context.Context, o *Options, pkgs []*model.Package) ([]string, b
 		}
 	}
 	if len(goPkgs) > 0 {
-		o.Log("Consultando el proxy de módulos de Go (%d módulos)…", len(goPkgs))
+		o.Log("Querying the Go module proxy (%d modules)…", len(goPkgs))
 		client := registry.NewGoProxy(o.HTTP, o.Endpoints.GoProxy, o.Cache)
 		var ec errCollector
 		workpool.ForEach(ctx, workers, len(goPkgs), func(ctx context.Context, i int) {

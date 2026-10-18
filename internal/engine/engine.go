@@ -36,7 +36,7 @@ func Scan(ctx context.Context, o Options) (*Result, error) {
 		rep.Incomplete = true
 	}
 	if len(inv.Packages) > 0 || len(inv.Findings) > 0 {
-		o.Log("Analizando %d paquetes (%s)…", len(inv.Packages), describeEcosystems(inv.Ecosystems))
+		o.Log("Analyzing %d packages (%s)…", len(inv.Packages), describeEcosystems(inv.Ecosystems))
 	}
 	rctx := &rules.Context{Now: now, Store: o.Store, Config: o.Config, Vulns: map[string][]*osv.Vuln{}}
 	online := !o.Offline

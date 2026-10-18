@@ -103,7 +103,7 @@ func Table(w io.Writer, rep *model.Report, o TableOptions) {
 		for _, e := range rep.Ecosystems {
 			eco = append(eco, e.Label())
 		}
-		fmt.Fprintf(w, "%s · %s · %s\n\n", strings.Join(eco, ", "), count(rep.Summary.Packages, "paquete", "paquetes"), count(len(rep.Sources), "manifiesto", "manifiestos"))
+		fmt.Fprintf(w, "%s · %s · %s\n\n", strings.Join(eco, ", "), count(rep.Summary.Packages, "package", "packages"), count(len(rep.Sources), "manifest", "manifests"))
 	} else {
 		fmt.Fprintln(w, "No supported manifests found (package-lock.json, requirements.txt, go.mod, Dockerfile, GitHub Actions workflows…).")
 		fmt.Fprintln(w)

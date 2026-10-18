@@ -269,7 +269,7 @@ func (a *App) cmdScan(ctx context.Context, args []string, audit bool) error {
 		report.Warnings(a.Stderr, rep, term.Palette{Enabled: term.ColorEnabled(os.Stderr, f.noColor) && !f.ci})
 	}
 	if setup.progress {
-		fmt.Fprintf(a.Stderr, "Hecho en %s\n", engine.Elapsed(start))
+		fmt.Fprintf(a.Stderr, "Done in %s\n", engine.Elapsed(start))
 	}
 	if f.strict && rep.Incomplete {
 		return &exitError{code: ExitIncomplete, msg: "incomplete analysis (--strict): a data source was unavailable"}
