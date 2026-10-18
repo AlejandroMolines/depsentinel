@@ -1,4 +1,4 @@
-**Español** | [English](en/transparency.md)
+**Español** | [English](../transparency.md)
 
 # Transparencia
 

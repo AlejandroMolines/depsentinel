@@ -133,7 +133,7 @@ func addActionUse(uses, rel string, no int, res *Result, seen map[string]*model.
 			"Fija la acción al SHA completo del commit: uses: "+a.Name()+"@<sha> # "+a.Ref))
 	case officialOwner(a.Owner):
 		res.Findings = append(res.Findings, staticFinding(model.Actions, a.Name(), a.Ref, rel, no, "action-pinning", "DS-ACTIONS-TAG", model.SeverityLow,
-			"Acción oficial fijada a un tag, no a un SHA",
+			"Official action pinned to a tag, not a SHA",
 			"Los tags se pueden mover. El riesgo es menor en acciones de GitHub, pero sigue sin ser inmutable.",
 			"Fija el SHA del commit: uses: "+a.Name()+"@<sha> # "+a.Ref))
 	default:

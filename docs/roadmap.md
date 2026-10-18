@@ -1,4 +1,4 @@
-[Español](../hoja-de-ruta.md) | **English**
+[Español](../es/hoja-de-ruta.md) | **English**
 
 # Roadmap and launch checklist
 
@@ -17,7 +17,7 @@
 | 9 | `--ci --fail-on high` | `internal/cli/scan.go` |
 | 10 | CycloneDX SBOM | `internal/report/sbom.go` |
 | 11 | Landing | `web/landing/index.html` and `web/landing/en/index.html` |
-| 12 | Donations and transparency | `web/landing/transparencia.html`, `web/landing/en/transparency.html`, `docs/en/transparency.md` |
+| 12 | Donations and transparency | `web/landing/transparencia.html`, `web/landing/en/transparency.html`, `docs/transparency.md` |
 | 13 | Docker | `Dockerfile` |
 | 14 | Launch | this list |
 

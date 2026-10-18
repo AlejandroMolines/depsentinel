@@ -25,7 +25,7 @@ func GitHubAnnotations(w io.Writer, rep *model.Report) {
 	const max = 40
 	for i, f := range rep.Findings {
 		if i >= max {
-			fmt.Fprintf(w, "::notice title=DepSentinel::%s\n", ghEscapeData(fmt.Sprintf("… y %d hallazgo(s) más (consulta el informe completo)", len(rep.Findings)-max)))
+			fmt.Fprintf(w, "::notice title=DepSentinel::%s\n", ghEscapeData(fmt.Sprintf("… and %d more finding(s) (see the full report)", len(rep.Findings)-max)))
 			return
 		}
 		level := "notice"
@@ -44,7 +44,7 @@ func GitHubAnnotations(w io.Writer, rep *model.Report) {
 		}
 		msg := fmt.Sprintf("[%s] %s: %s", f.Severity.Label(), FormatPackage(f), oneLine(f.Title))
 		if f.FixedIn != "" {
-			msg += " (corregido en " + f.FixedIn + ")"
+			msg += " (fixed in " + f.FixedIn + ")"
 		}
 		fmt.Fprintf(w, "::%s %s::%s\n", level, props, ghEscapeData(msg))
 	}

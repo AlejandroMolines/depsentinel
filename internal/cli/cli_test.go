@@ -59,7 +59,7 @@ func TestBasics(t *testing.T) {
 func TestScanExitCodes(t *testing.T) {
 	dir := setup(t)
 	code, out, _ := run(t, "scan", dir, "--no-color")
-	if code != 0 || !strings.Contains(out, "event-stream@3.3.6") || !strings.Contains(out, "crítico") {
+	if code != 0 || !strings.Contains(out, "event-stream@3.3.6") || !strings.Contains(out, "critical") {
 		t.Errorf("scan sin umbral no falla: %d\n%s", code, out)
 	}
 	if code, _, _ := run(t, "scan", dir, "--ci"); code != ExitFindings {
@@ -71,7 +71,7 @@ func TestScanExitCodes(t *testing.T) {
 	if code, _, _ := run(t, "scan", "--fail-on", "critical", dir); code != ExitFindings {
 		t.Errorf("flags antes o después de la ruta: %d", code)
 	}
-	if code, _, errb := run(t, "scan", dir, "--fail-on", "raro"); code != ExitUsage || !strings.Contains(errb, "severidad") {
+	if code, _, errb := run(t, "scan", dir, "--fail-on", "raro"); code != ExitUsage || !strings.Contains(errb, "severity") {
 		t.Errorf("severidad inválida: %d %q", code, errb)
 	}
 	if code, _, errb := run(t, "scan", dir, "--ecosystem", "pypi"); code != ExitUsage || !strings.Contains(errb, "no se encontraron manifiestos") {
@@ -135,7 +135,7 @@ func TestAllowlistFlow(t *testing.T) {
 	if code, _, _ := run(t, "allowlist", "add", "event-stream@3.3.6", "--rule", "malicious", "--reason", "falso positivo confirmado", "--dir", dir); code != 0 {
 		t.Fatal("add malicious con versión")
 	}
-	if code, out, _ := run(t, "scan", dir, "--ci"); code != 0 || !strings.Contains(out, "en lista blanca") {
+	if code, out, _ := run(t, "scan", dir, "--ci"); code != 0 || !strings.Contains(out, "allowlisted") {
 		t.Errorf("con excepción explícita el build pasa: %d\n%s", code, out)
 	}
 	if code, out, _ := run(t, "allowlist", "list", "--dir", dir); code != 0 || !strings.Contains(out, "falso positivo confirmado") || !strings.Contains(out, "event-stream") {

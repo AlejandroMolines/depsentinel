@@ -1,4 +1,4 @@
-**Español** | [English](en/installation.md)
+**Español** | [English](../installation.md)
 
 # Instalación
 
@@ -17,6 +17,8 @@ Para una versión concreta: `...@v1.0.0`.
 ```bash
 docker run --rm -v $(pwd):/src depsentinel/depsentinel scan /src
 ```
+
+Este comando **no instala** `depsentinel`: ejecuta un escaneo puntual en el directorio montado. Para tener el comando disponible en tu terminal, usa `go install` o el wrapper `scripts/depsentinel`.
 
 La imagen es mínima (`distroless`) y se ejecuta sin root. Si quieres escribir informes en el directorio montado,
 ejecuta con tu usuario: `docker run --rm --user $(id -u):$(id -g) -v $(pwd):/src depsentinel/depsentinel scan /src -o /src/report.json --format json`.

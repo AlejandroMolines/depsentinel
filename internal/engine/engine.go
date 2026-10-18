@@ -41,7 +41,7 @@ func Scan(ctx context.Context, o Options) (*Result, error) {
 	rctx := &rules.Context{Now: now, Store: o.Store, Config: o.Config, Vulns: map[string][]*osv.Vuln{}}
 	online := !o.Offline
 	if !online {
-		rep.Warnings = append(rep.Warnings, "Modo sin conexión: no se consultan OSV ni los registries (solo reglas locales).")
+		rep.Warnings = append(rep.Warnings, "Offline mode: OSV and registries are not queried (local rules only).")
 	}
 	if online && !o.NoOSV {
 		vulns, warns, bad := queryOSV(ctx, &o, inv.Packages)

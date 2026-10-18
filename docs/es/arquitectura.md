@@ -1,4 +1,4 @@
-**Español** | [English](en/architecture.md)
+**Español** | [English](../architecture.md)
 
 # Arquitectura
 
@@ -52,7 +52,7 @@ Decisiones de diseño:
 
 1. Escribe la función `func MiRegla(c *Context, p *model.Package) []model.Finding` en `internal/rules`.
 2. Llámala desde `Evaluate` (`internal/rules/rules.go`) y respeta `c.enabled("mi-regla")`.
-3. Añade el nombre a `config.KnownRules` y documenta severidad y arreglo en `docs/reglas.md`.
+3. Añade el nombre a `config.KnownRules` y documenta severidad y arreglo en `docs/es/reglas.md`.
 4. Tests: un caso que avisa y uno parecido que no.
 
 ## Añadir un ecosistema

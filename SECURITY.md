@@ -1,35 +1,36 @@
-**Español** | [English](SECURITY.en.md)
+[Español](SECURITY.es.md) | **English**
 
-# Política de seguridad
+# Security policy
 
-## Cómo informar de una vulnerabilidad
+## How to report a vulnerability
 
-**No abras un issue público.** Usa el [aviso privado de seguridad de GitHub](https://github.com/AlejandroMolines/depsentinel/security/advisories/new)
-de este repositorio. Incluye la versión (`depsentinel version`), los pasos para reproducirlo y el impacto que ves.
+**Do not open a public issue.** Use this repository's
+[private GitHub security advisory](https://github.com/AlejandroMolines/depsentinel/security/advisories/new). Include the
+version (`depsentinel version`), the steps to reproduce and the impact you see.
 
-Objetivo: acusar recibo en 3 días y publicar la corrección y el aviso en cuanto esté lista, dándote el crédito si lo deseas.
+Goal: acknowledge within 3 days and publish the fix and the advisory as soon as it is ready, crediting you if you wish.
 
-## Qué consideramos una vulnerabilidad
+## What we consider a vulnerability
 
-* Ejecución de código o escritura de ficheros fuera de lo esperado al analizar un lockfile, Dockerfile o workflow
-  manipulado (el programa lee ficheros que pueden venir de terceros).
-* Fallos en la verificación de firmas o hashes del feed de la base de datos (`db update`).
-* Fugas de información hacia fuera de lo documentado en la sección de privacidad del README.
-* Contenido del panel HTML que permita ejecutar scripts a partir de datos de un informe (XSS).
-* Problemas en la Action, el workflow de release o la cadena de publicación.
+* Code execution or file writes beyond what is expected when analyzing a tampered lockfile, Dockerfile or workflow
+  (the program reads files that may come from third parties).
+* Flaws in the signature or hash verification of the database feed (`db update`).
+* Information leaks beyond what the privacy section of the README documents.
+* HTML dashboard content that lets a report's data run scripts (XSS).
+* Problems in the Action, the release workflow or the publishing chain.
 
-Que DepSentinel **no detecte** un paquete malicioso concreto es un error de cobertura, no una vulnerabilidad:
-abre un issue normal (o un PR con la entrada en `db/malicious.json`, ver CONTRIBUTING.md).
+DepSentinel **not detecting** a specific malicious package is a coverage bug, not a vulnerability: open a regular
+issue (or a PR adding the entry to `db/malicious.json`, see CONTRIBUTING.es.md).
 
-## Cómo se protege el propio proyecto
+## How the project protects itself
 
-* **Sin dependencias de terceros en Go**: solo la biblioteca estándar. No hay árbol de dependencias que vigilar.
-* Binarios de cada release con `SHA256SUMS` y atestación de procedencia (ver `docs/instalacion.md` para verificarlos).
-* Compilación con `-trimpath` y sin identificador de build, para facilitar builds reproducibles.
-* El feed de la base de datos se firma con Ed25519; el cliente verifica la firma del índice y el hash de cada fichero.
-* El panel HTML incluye una política CSP que impide cargar o enviar nada fuera del fichero.
-* El CI escanea el propio repositorio con DepSentinel y Dependabot mantiene al día las acciones y la imagen base.
+* **No third-party Go dependencies**: only the standard library. There is no dependency tree to watch.
+* Every release ships binaries with `SHA256SUMS` and a provenance attestation (see `docs/installation.md`).
+* Built with `-trimpath` and no build ID, to help reproducible builds.
+* The database feed is signed with Ed25519; the client verifies the index signature and each file's hash.
+* The HTML dashboard ships a CSP that prevents loading or sending anything outside the file.
+* CI scans the repository itself with DepSentinel and Dependabot keeps actions and the base image up to date.
 
-## Versiones soportadas
+## Supported versions
 
-Solo la última versión menor recibe correcciones de seguridad mientras el proyecto sea 0.x.
+Only the latest minor version receives security fixes while the project is 0.x.

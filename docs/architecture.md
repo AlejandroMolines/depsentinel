@@ -1,4 +1,4 @@
-[Español](../arquitectura.md) | **English**
+[Español](../es/arquitectura.md) | **English**
 
 # Architecture
 
@@ -55,7 +55,7 @@ Design decisions:
 
 1. Write `func MyRule(c *Context, p *model.Package) []model.Finding` in `internal/rules`.
 2. Call it from `Evaluate` (`internal/rules/rules.go`) and honor `c.enabled("my-rule")`.
-3. Add the name to `config.KnownRules` and document severity and fix in `docs/en/rules.md` (and `docs/reglas.md`).
+3. Add the name to `config.KnownRules` and document severity and fix in `docs/rules.md` (and `docs/es/reglas.md`).
 4. Tests: one case that warns and a similar one that does not.
 
 ## Adding an ecosystem

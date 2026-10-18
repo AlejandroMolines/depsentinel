@@ -1,4 +1,4 @@
-**Español** | [English](en/roadmap.md)
+**Español** | [English](../roadmap.md)
 
 # Hoja de ruta y lista de lanzamiento
 
@@ -17,7 +17,7 @@
 | 9 | `--ci --fail-on high` | `internal/cli/scan.go` |
 | 10 | SBOM CycloneDX | `internal/report/sbom.go` |
 | 11 | Landing | `web/landing/index.html` |
-| 12 | Donaciones y transparencia | `web/landing/transparencia.html`, `docs/transparencia.md` |
+| 12 | Donaciones y transparencia | `web/landing/transparencia.html`, `docs/es/transparencia.md` |
 | 13 | Docker | `Dockerfile` |
 | 14 | Lanzamiento | esta lista |
 

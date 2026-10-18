@@ -1,45 +1,48 @@
-**Español** | [English](README.en.md)
+[Español](README.es.md) | **English**
 
 # DepSentinel
 
 [![CI](https://github.com/AlejandroMolines/depsentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/AlejandroMolines/depsentinel/actions/workflows/ci.yml)
-[![Licencia: MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**Escanea tus dependencias antes de instalar o desplegar.** Herramienta de código abierto, gratuita y local que
-bloquea paquetes maliciosos, typosquatting, scripts de instalación peligrosos, dependencias abandonadas y
-vulnerabilidades en **npm, PyPI, Go, Docker y GitHub Actions**.
+**Scan your dependencies before you install or deploy them.** A free, open-source, local-first tool that blocks
+malicious packages, typosquatting, dangerous install scripts, abandoned dependencies and vulnerabilities in
+**npm, PyPI, Go, Docker and GitHub Actions**.
 
-Un `npm install` ejecuta código de desconocidos: en un proyecto React de prueba, 19 dependencias directas se
-convirtieron en 1.328 paquetes instalados. DepSentinel los revisa todos en segundos, en tu máquina o en tu CI, sin
-cuenta, sin servidor propio y sin telemetría. Sin dependencias de terceros: solo la biblioteca estándar de Go.
+An `npm install` runs code from strangers: in a test React project, 19 direct dependencies turned into 1,328
+installed packages. DepSentinel checks all of them in seconds, on your machine or in your CI, with no account, no
+server of our own and no telemetry. No third-party dependencies: only the Go standard library.
 
-## Instalación
+> **Language note.** The website and the documentation are available in English and Spanish. The CLI messages
+> (finding titles, explanations and fixes) are in **English**; rule IDs, flags and JSON keys are English.
+
+## Install
 
 ```bash
-go install github.com/AlejandroMolines/depsentinel/cmd/depsentinel@latest      # Go 1.22 o superior
-docker run --rm -v $(pwd):/src depsentinel/depsentinel scan /src        # sin instalar nada
+go install github.com/AlejandroMolines/depsentinel/cmd/depsentinel@latest      # Go 1.22 or later
+docker run --rm -v $(pwd):/src depsentinel/depsentinel scan /src        # one-off scan, nothing to install
 ```
 
-También hay binarios con suma de comprobación y atestación de procedencia en cada release
-([instalación y verificación](docs/instalacion.md)).
+Release binaries come with checksums and a provenance attestation
+([installation and verification](docs/installation.md)).
 
-## Uso
+## Usage
 
 ```bash
-depsentinel init                      # crea .depsentinel.json y la lista blanca (--workflow añade el workflow de CI)
-depsentinel scan                      # escanea el directorio actual
+depsentinel init                      # creates .depsentinel.json and the allowlist (--workflow adds a CI workflow)
+depsentinel scan                      # scan the current directory
 depsentinel scan --ecosystem npm --lock package-lock.json
 depsentinel scan --format json --output report.json
-depsentinel scan --ci --fail-on high  # falla (código 1) si hay riesgo alto o crítico
+depsentinel scan --ci --fail-on high  # exit code 1 on high or critical risk
 depsentinel audit --only high,critical
-depsentinel fix --dry-run             # propone arreglos; sin --dry-run los aplica
-depsentinel allowlist add lodash --reason "revisado manualmente"
+depsentinel fix --dry-run             # propose fixes; without --dry-run it applies them
+depsentinel allowlist add lodash --reason "reviewed manually"
 depsentinel sbom --format cyclonedx --output sbom.json
-depsentinel db update                 # actualiza la base de datos local (feed firmado)
-depsentinel report --html --open      # panel HTML con el detalle de cada paquete
+depsentinel db update                 # update the local database (signed feed)
+depsentinel report --html --open      # HTML dashboard with the detail of every package
 ```
 
-Salida de ejemplo (abreviada, proyecto ficticio):
+Sample output (abridged, fictional project; messages are in Spanish for now):
 
 ```
 DepSentinel 0.1.0 · ~/tienda-online
@@ -59,37 +62,39 @@ Riesgo global: CRÍTICO
 ✖ 5 hallazgos de severidad alto o superior: el build falla.
 ```
 
-**Códigos de salida:** `0` correcto · `1` hallazgos sobre el umbral · `2` uso incorrecto o configuración inválida ·
-`3` análisis incompleto con `--strict`, o error de ejecución.
+(`crítico` = critical, `alto` = high, `medio` = medium, `bajo` = low.)
 
-## Qué detecta
+**Exit codes:** `0` OK · `1` findings at or above the threshold · `2` bad usage or invalid configuration ·
+`3` incomplete analysis with `--strict`, or a runtime error.
 
-| Regla | Qué busca |
+## What it detects
+
+| Rule | What it looks for |
 |---|---|
-| `malicious` | Paquetes maliciosos o comprometidos conocidos: avisos `MAL-*` de OSV/OpenSSF y una base local firmada que funciona sin conexión |
-| `typosquat` | Nombres casi idénticos a los populares (`reactt`, `lodassh`, `reqeusts`), ajustado con la antigüedad y el número de versiones del paquete |
-| `install-script`, `suspicious-script` | Scripts `preinstall`/`install`/`postinstall`; con `--deep`, el código que ejecutan (descargas remotas, shells inversas, robo de credenciales) y el hash del tarball contra el lockfile |
-| `vulnerability` | CVE y GHSA vía [OSV](https://osv.dev), con severidad CVSS y la versión que lo corrige |
-| `unmaintained`, `deprecated`, `yanked` | Paquetes abandonados, deprecados o retirados |
-| `provenance`, `version-anomaly`, `fresh-release` | Cambios de publicador o mantenedores en versiones recientes, versiones `99.x` (dependency confusion), paquetes que ya no existen |
-| `source`, `index-url`, `integrity` | Dependencias desde git/URL, `replace` en `go.mod`, índices inseguros, lockfiles sin hash |
-| `image-tag`, `image-digest`, `remote-script`, `remote-add`, `secret-in-image`, `root-user` | Dockerfiles y compose: imágenes `latest`, `curl \| sh`, secretos en `ENV`/`ARG`, contenedores como root |
-| `action-pinning`, `pwn-request`, `workflow-injection`, `workflow-permissions` | GitHub Actions: acciones sin fijar a un SHA, `pull_request_target` con checkout del PR, inyección de comandos, permisos excesivos |
+| `malicious` | Known malicious or compromised packages: OSV/OpenSSF `MAL-*` advisories plus a signed local database that works offline |
+| `typosquat` | Names almost identical to popular ones (`reactt`, `lodassh`, `reqeusts`), tuned with package age and version count |
+| `install-script`, `suspicious-script` | `preinstall`/`install`/`postinstall` scripts; with `--deep`, the code they run (remote downloads, reverse shells, credential theft) and the tarball hash against the lockfile |
+| `vulnerability` | CVE and GHSA advisories via [OSV](https://osv.dev), with CVSS severity and the fixed version |
+| `unmaintained`, `deprecated`, `yanked` | Abandoned, deprecated or yanked packages |
+| `provenance`, `version-anomaly`, `fresh-release` | Publisher or maintainer changes in recent versions, `99.x` versions (dependency confusion), packages that no longer exist |
+| `source`, `index-url`, `integrity` | Dependencies from git/URL, `replace` in `go.mod`, insecure indexes, lockfiles without hashes |
+| `image-tag`, `image-digest`, `remote-script`, `remote-add`, `secret-in-image`, `root-user` | Dockerfiles and compose: `latest` images, `curl \| sh`, secrets in `ENV`/`ARG`, containers running as root |
+| `action-pinning`, `pwn-request`, `workflow-injection`, `workflow-permissions` | GitHub Actions: actions not pinned to a SHA, `pull_request_target` checking out the PR, command injection, excessive permissions |
 
-Cada hallazgo incluye una explicación y una forma concreta de arreglarlo. Detalle completo, severidades y cómo
-desactivar cada regla en [`docs/reglas.md`](docs/reglas.md).
+Every finding comes with an explanation and a concrete way to fix it. Full details, severities and how to disable
+each rule: [`docs/rules.md`](docs/rules.md).
 
-### Qué lee de cada ecosistema
+### What it reads per ecosystem
 
-| Ecosistema | Ficheros | Fuentes externas (solo con conexión) |
+| Ecosystem | Files | External sources (online only) |
 |---|---|---|
-| npm | `package-lock.json`, `npm-shrinkwrap.json` (v1, v2 y v3, workspaces) | OSV, registry de npm |
-| PyPI | `requirements*.txt` (con `-r`), `Pipfile.lock`, `poetry.lock`, `uv.lock` | OSV, PyPI |
-| Go | `go.mod` (`require`, `replace`) | OSV, proxy de módulos |
-| Docker | `Dockerfile*`, `Containerfile`, `docker-compose*.yml`, `compose*.yml` | — (análisis estático) |
-| GitHub Actions | `.github/workflows/*.yml`, acciones compuestas | OSV (solo etiquetas semver exactas) |
+| npm | `package-lock.json`, `npm-shrinkwrap.json` (v1, v2, v3, workspaces) | OSV, npm registry |
+| PyPI | `requirements*.txt` (with `-r`), `Pipfile.lock`, `poetry.lock`, `uv.lock` | OSV, PyPI |
+| Go | `go.mod` (`require`, `replace`) | OSV, module proxy |
+| Docker | `Dockerfile*`, `Containerfile`, `docker-compose*.yml`, `compose*.yml` | none (static analysis) |
+| GitHub Actions | `.github/workflows/*.yml`, composite actions | OSV (exact semver tags only) |
 
-## En CI
+## In CI
 
 ```yaml
 - uses: AlejandroMolines/depsentinel/action@v1
@@ -97,28 +102,28 @@ desactivar cada regla en [`docs/reglas.md`](docs/reglas.md).
     fail-on: high
 ```
 
-La Action compila DepSentinel desde el mismo commit, escanea una vez, comenta (y actualiza, sin duplicar) el
-resultado en el pull request, escribe el resumen del job y sube el informe JSON y el panel HTML como artefacto.
-Entradas y salidas en [`action/action.yml`](action/action.yml). Para fijar la versión usa `version: v1.0.0` si la
-acción vive en otro repositorio.
+The Action builds DepSentinel from the same commit, scans once, comments on the pull request (updating the previous
+comment instead of duplicating it), writes the job summary and uploads the JSON report and the HTML dashboard as an
+artifact. Inputs and outputs: [`action/action.yml`](action/action.yml). If the action lives in another repository,
+pin the version with `version: v1.0.0`.
 
-Sin la Action: `depsentinel scan --ci --fail-on high` emite anotaciones de GitHub en el PR y devuelve el código de salida.
+Without the Action: `depsentinel scan --ci --fail-on high` emits GitHub annotations on the PR and returns the exit code.
 
-## Lista blanca con justificación
+## Allowlist with justification
 
 ```bash
-depsentinel allowlist add lodash --reason "revisado manualmente"
-depsentinel allowlist add @babel/core --rule typosquat --ecosystem npm --reason "monorepo conocido" --expires 2027-06-30
+depsentinel allowlist add lodash --reason "reviewed manually"
+depsentinel allowlist add @babel/core --rule typosquat --ecosystem npm --reason "known monorepo" --expires 2027-06-30
 depsentinel allowlist list
 ```
 
-Se guarda en `.depsentinel/allowlist.json` (haz commit: el equipo y el CI lo ven). **Toda excepción exige un motivo.**
-Las caducadas dejan de aplicarse y avisan. Un paquete malicioso conocido solo se puede permitir con una excepción
-explícita para la regla `malicious` y la versión exacta; una excepción genérica nunca lo oculta.
+Stored in `.depsentinel/allowlist.json` (commit it: your team and your CI see it). **Every exception requires a
+reason.** Expired entries stop applying and raise a warning. A known malicious package can only be allowed with an
+explicit exception for the `malicious` rule and the exact version; a generic exception never hides it.
 
-## Configuración
+## Configuration
 
-`depsentinel init` crea `.depsentinel.json` (los campos desconocidos se rechazan para detectar erratas):
+`depsentinel init` creates `.depsentinel.json` (unknown fields are rejected so typos do not go unnoticed):
 
 ```json
 {
@@ -134,58 +139,58 @@ explícita para la regla `malicious` y la versión exacta; una excepción genér
 }
 ```
 
-## SBOM y panel
+## SBOM and dashboard
 
-* `depsentinel sbom --format cyclonedx` genera un SBOM CycloneDX 1.5 (validado contra el esquema oficial) con PURLs,
-  hashes de integridad y grafo de dependencias.
-* `depsentinel report --html --open` abre un panel autocontenido (sin servidor ni peticiones de red): riesgo global,
-  filtros, detalle por paquete (puntuación, recomendación usar/actualizar/revisar/evitar, mantenedores, scripts),
-  historial de escaneos y marcado local de falsos positivos con el comando de lista blanca listo para copiar.
-  También abre cualquier informe con `--input report.json`.
+* `depsentinel sbom --format cyclonedx` generates a CycloneDX 1.5 SBOM (validated against the official schema) with
+  PURLs, integrity hashes and the dependency graph.
+* `depsentinel report --html --open` opens a self-contained dashboard (no server, no network requests): overall risk,
+  filters, per-package detail (score, use/update/review/avoid recommendation, maintainers, scripts), scan history and
+  local false-positive marking with the allowlist command ready to copy. It also opens any report with
+  `--input report.json`. The dashboard UI is in Spanish for now, like the CLI.
 
-## Privacidad
+## Privacy
 
-Con conexión, sale de tu máquina únicamente el **nombre y la versión de cada paquete público** hacia `api.osv.dev`
-y el **nombre** hacia `registry.npmjs.org`, `pypi.org` o `proxy.golang.org`. Nunca tu código, tu lockfile completo,
-rutas, tokens ni variables de entorno. Los paquetes instalados desde git, rutas locales o URLs no se consultan fuera.
-`--offline` no abre ninguna conexión; `--no-osv` y `--no-registry` apagan cada fuente; `DEPSENTINEL_OSV_URL` y
-compañía apuntan a espejos internos. Los únicos comandos que salen a otros sitios son `db update` (descarga el feed)
-y `fix` (consulta `api.github.com` para resolver el SHA de una acción).
+Online, only the **name and version of each public package** leave your machine, to `api.osv.dev`, and the
+**name** to `registry.npmjs.org`, `pypi.org` or `proxy.golang.org`. Never your code, your full lockfile, paths,
+tokens or environment variables. Packages installed from git, local paths or URLs are not looked up externally.
+`--offline` opens no connection; `--no-osv` and `--no-registry` switch each source off; `DEPSENTINEL_OSV_URL` and
+friends point to internal mirrors. The only commands that reach other places are `db update` (downloads the feed) and
+`fix` (queries `api.github.com` to resolve an action's SHA).
 
-## Base de datos local
+## Local database
 
-La fuente principal en cada escaneo es OSV. Además hay una semilla embebida (`db/malicious.json`, `db/popular.json`)
-que permite detectar los casos más conocidos sin conexión. `depsentinel db update` descarga un feed ampliado y
-**verifica una firma Ed25519** del índice y los hashes de cada fichero antes de usarlo; sin clave pública configurada
-se niega a continuar (`--allow-unsigned` bajo tu responsabilidad). Cómo firmar el feed: [`docs/arquitectura.md`](docs/arquitectura.md).
+OSV is the main source on every scan. There is also an embedded seed (`db/malicious.json`, `db/popular.json`) that
+detects the best-known cases offline. `depsentinel db update` downloads an extended feed and **verifies an Ed25519
+signature** of the index and the hash of each file before using it; without a configured public key it refuses to
+continue (`--allow-unsigned` at your own risk). How to sign the feed: [`docs/architecture.md`](docs/architecture.md).
 
-## Límites conocidos
+## Known limitations
 
-* npm solo lee `package-lock.json` y `npm-shrinkwrap.json` (no `yarn.lock` ni `pnpm-lock.yaml` todavía).
-* En PyPI solo se evalúa lo que aparece en los ficheros; `requirements.txt` no resuelve dependencias transitivas.
-* Docker es análisis estático de Dockerfiles: no escanea el contenido de las imágenes (usa Trivy o Grype para eso).
-* Los vectores CVSS v4 no se puntúan: se usa la etiqueta de severidad de GitHub o `medium` por defecto.
-* El análisis de scripts es estático y heurístico: detecta lo habitual, no sustituye una revisión ni un sandbox.
-* El typosquatting es heurístico y puede dar falsos positivos: para eso está la lista blanca con justificación.
-* Los mensajes del CLI y la interfaz del panel están en castellano; la web y la documentación tienen versión en inglés ([README.en.md](README.en.md), `docs/en/`).
+* npm only reads `package-lock.json` and `npm-shrinkwrap.json` (no `yarn.lock` or `pnpm-lock.yaml` yet).
+* For PyPI only what appears in the files is evaluated; `requirements.txt` does not resolve transitive dependencies.
+* Docker support is static analysis of Dockerfiles: it does not scan image contents (use Trivy or Grype for that).
+* CVSS v4 vectors are not scored: the GitHub severity label or `medium` is used.
+* Script analysis is static and heuristic: it catches the usual patterns, it is not a review or a sandbox.
+* Typosquatting is heuristic and can produce false positives: that is what the allowlist with justification is for.
+* CLI messages and the dashboard UI are in Spanish; the website and the docs are bilingual.
 
-## Desarrollo
+## Development
 
 ```bash
-make check      # formato, vet, tests con -race y validación del feed (lo mismo que el CI)
+make check      # format, vet, race tests and feed validation (same as CI)
 make build      # ./depsentinel
-make dist       # binarios para linux/darwin/windows + SHA256SUMS
+make dist       # binaries for linux/darwin/windows + SHA256SUMS
 ```
 
-Estructura, cómo añadir una regla o un ecosistema y el modelo de amenazas: [`docs/arquitectura.md`](docs/arquitectura.md).
-Guía de contribución: [`CONTRIBUTING.md`](CONTRIBUTING.md). Seguridad: [`SECURITY.md`](SECURITY.md).
+Structure, how to add a rule or an ecosystem, and the threat model: [`docs/architecture.md`](docs/architecture.md).
+Contributing: [`CONTRIBUTING.md`](CONTRIBUTING.md). Security: [`SECURITY.md`](SECURITY.md).
 
-## Antes de publicar
+## Before publishing
 
-El repositorio usa `AlejandroMolines` como usuario de GitHub de ejemplo. `scripts/set-owner.sh <tu-usuario>` lo sustituye en
-todo el proyecto. La lista completa de pasos (claves de firma, GitHub Pages, donaciones) está en
-[`docs/hoja-de-ruta.md`](docs/hoja-de-ruta.md).
+The repository uses `AlejandroMolines` as a placeholder GitHub username. `scripts/set-owner.sh <your-username>` replaces it
+across the project. The full checklist (signing keys, GitHub Pages, donations) is in
+[`docs/roadmap.md`](docs/roadmap.md).
 
-## Licencia
+## License
 
-[MIT](LICENSE). Las donaciones son opcionales y nunca desbloquean funciones: [`docs/transparencia.md`](docs/transparencia.md).
+[MIT](LICENSE). Donations are optional and never unlock features: [`docs/transparency.md`](docs/transparency.md).

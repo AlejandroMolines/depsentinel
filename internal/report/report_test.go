@@ -34,7 +34,7 @@ func TestTable(t *testing.T) {
 	var b bytes.Buffer
 	Table(&b, rep, TableOptions{Color: term.Palette{}, FailOn: model.SeverityHigh, Width: 100})
 	out := b.String()
-	for _, want := range []string{"SEVERIDAD", "crítico", "event-stream@3.3.6", "lodash@4.17.15", "corregido en 4.17.19", "Qué hacer primero", "1 crítico", "1 alto", "1 medio", "1 bajo", "Riesgo global: CRÍTICO", "el build falla"} {
+	for _, want := range []string{"SEVERITY", "critical", "event-stream@3.3.6", "lodash@4.17.15", "fixed in 4.17.19", "What to do first", "1 critical", "1 high", "1 medium", "1 low", "Overall risk: CRITICAL", "build fails"} {
 		if !strings.Contains(out, want) {
 			t.Errorf("falta %q en:\n%s", want, out)
 		}
@@ -53,7 +53,7 @@ func TestTable(t *testing.T) {
 	}
 	b.Reset()
 	Table(&b, &model.Report{Version: "x", Summary: model.Summary{BySeverity: map[string]int{}}}, TableOptions{})
-	if !strings.Contains(b.String(), "No se encontraron manifiestos") {
+	if !strings.Contains(b.String(), "No supported manifests found") {
 		t.Error("sin manifiestos debe explicarlo")
 	}
 	b.Reset()
@@ -66,7 +66,7 @@ func TestTable(t *testing.T) {
 func TestMarkdown(t *testing.T) {
 	rep, _ := sample()
 	md := Markdown(rep, MarkdownOptions{FailOn: model.SeverityHigh, ReportURL: "https://example.com/r"})
-	for _, want := range []string{CommentMarker, "riesgo **crítico**", "2 dependencia(s) de riesgo alto o crítico", "| 🔴 crítico |", "Prototype \\| Pollution", "Cómo arreglarlo", "allowlist add", "[Informe completo](https://example.com/r)", "El check falla"} {
+	for _, want := range []string{CommentMarker, "risk **critical**", "2 high or critical dependency finding(s)", "| 🔴 critical |", "Prototype \\| Pollution", "How to fix", "allowlist add", "[Full report](https://example.com/r)", "The check fails"} {
 		if !strings.Contains(md, want) {
 			t.Errorf("falta %q en:\n%s", want, md)
 		}
@@ -75,11 +75,11 @@ func TestMarkdown(t *testing.T) {
 		t.Error("el Markdown debe escapar HTML de los títulos")
 	}
 	md = Markdown(rep, MarkdownOptions{MaxRows: 1})
-	if !strings.Contains(md, "hallazgo(s) más") {
+	if !strings.Contains(md, "more finding(s)") {
 		t.Error("el recorte de filas debe avisar")
 	}
 	clean := &model.Report{Summary: model.Summary{Packages: 3}, Ecosystems: []model.Ecosystem{model.NPM}}
-	if md := Markdown(clean, MarkdownOptions{FailOn: model.SeverityHigh}); !strings.Contains(md, "Sin hallazgos") || !strings.Contains(md, "El check pasa") {
+	if md := Markdown(clean, MarkdownOptions{FailOn: model.SeverityHigh}); !strings.Contains(md, "No findings") || !strings.Contains(md, "The check passes") {
 		t.Errorf("limpio: %s", md)
 	}
 }

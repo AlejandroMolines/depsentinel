@@ -1,49 +1,54 @@
-**Español** | [English](CONTRIBUTING.en.md)
+[Español](CONTRIBUTING.es.md) | **English**
 
-# Contribuir a DepSentinel
+# Contributing to DepSentinel
 
-¡Gracias! Las contribuciones más útiles suelen ser **informes de falsos positivos**, **paquetes maliciosos que no
-detecta** y **casos de prueba reales**.
+Thank you! The most useful contributions are usually **false-positive reports**, **malicious packages it misses**
+and **real test cases**.
 
-## Preparar el entorno
+## Set up
 
 ```bash
 git clone https://github.com/AlejandroMolines/depsentinel && cd depsentinel
-make check          # formato, vet, tests con -race y validación del feed
+make check          # format, vet, race tests and feed validation
 make build && ./depsentinel scan . --offline
 ```
 
-Solo hace falta Go 1.22 o superior. El proyecto no tiene dependencias externas y debe seguir así: usa la biblioteca
-estándar salvo que haya una razón de peso (y se discuta antes en un issue).
+You only need Go 1.22 or later. The project has no external dependencies and should stay that way: use the standard
+library unless there is a strong reason (and discuss it in an issue first).
 
-## Reglas de oro
+## Ground rules
 
-1. **Una regla nueva lleva tests**: un caso que debe avisar y otro parecido que **no** debe avisar. Los falsos
-   positivos cuestan más confianza que los falsos negativos.
-2. **Todo hallazgo explica y propone**: título, detalle y `Fix` accionable, en español claro.
-3. **Los datos externos no son de fiar**: nombres de paquete, mensajes de deprecación y respuestas de registries
-   pueden venir de un atacante. Nada de ejecutarlos, interpolarlos en comandos ni pintarlos sin escapar (el panel usa
+1. **A new rule comes with tests**: a case that must warn and a similar one that must **not**. False positives cost
+   more trust than false negatives.
+2. **Every finding explains and proposes**: title, detail and an actionable `Fix`.
+3. **External data is untrusted**: package names, deprecation messages and registry responses can come from an
+   attacker. Never execute them, interpolate them into commands or render them unescaped (the dashboard uses
    `textContent`).
-4. **Nada de red sin `--offline`**: toda consulta externa pasa por `internal/httpx` y respeta el modo sin conexión.
-5. Si cambia el comportamiento visible, actualiza `docs/reglas.md` o el README.
+4. **No network without `--offline`**: every external query goes through `internal/httpx` and honors offline mode.
+5. If visible behavior changes, update `docs/rules.md` (and its Spanish twin `docs/es/reglas.md`) or the README.
 
-## Añadir paquetes maliciosos a la base de datos
+## Adding known-malicious packages to the database
 
-Edita `db/malicious.json`: `id` único (`DS-NNNN`), `ecosystem`, `name`, `versions` (`["*"]` = todas), `kind`
-(`malware`, `compromised`, `sabotage` o `protestware`), `summary` y `reference` (enlace a una fuente pública: aviso
-de GitHub, entrada de OSV, artículo del registry). **Sin fuente pública no se acepta.** Valida con
-`go run ./cmd/dbtool check -dir db`. Los mantenedores regeneran la firma del feed (`make db-sign`).
+Edit `db/malicious.json`: unique `id` (`DS-NNNN`), `ecosystem`, `name`, `versions` (`["*"]` = all), `kind`
+(`malware`, `compromised`, `sabotage` or `protestware`), `summary` and `reference` (a link to a public source: a
+GitHub advisory, an OSV entry, a registry write-up). **Entries without a public source are not accepted.** Validate
+with `go run ./cmd/dbtool check -dir db`. Maintainers regenerate the feed signature (`make db-sign`).
 
-## Añadir un ecosistema o una regla
+## Adding an ecosystem or a rule
 
-Ver `docs/arquitectura.md`: un parser en `internal/scanner`, reglas en `internal/rules`, y tests con ficheros reales
-reducidos al mínimo.
+See `docs/architecture.md`: a parser in `internal/scanner`, rules in `internal/rules`, and tests with real files
+reduced to the minimum.
 
-## Estilo
+## Language
 
-`gofmt` obligatorio, errores con contexto, mensajes para personas en español y identificadores (reglas, flags,
-claves JSON) en inglés. Commits pequeños y descriptivos.
+User-facing messages are currently in Spanish (the CLI) and identifiers (rules, flags, JSON keys) are in English.
+Documentation and the website must be kept in both languages: when you change `docs/foo.md` (English), update `docs/es/…` (Spanish).
+Pull requests that add English CLI messages are very welcome (see the roadmap).
 
-## Conducta
+## Style
 
-Sé amable y asume buena fe. Se acepta crítica técnica dura; no se aceptan ataques personales.
+`gofmt` is mandatory, errors carry context. Small, descriptive commits.
+
+## Conduct
+
+Be kind and assume good faith. Hard technical criticism is welcome; personal attacks are not.

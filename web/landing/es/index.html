@@ -1,16 +1,16 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DepSentinel: scan your dependencies before you install or deploy them</title>
-<meta name="description" content="Free, open-source, local-first tool that checks your dependencies (npm, PyPI, Go, Docker and GitHub Actions) and blocks malicious packages, typosquatting, dangerous install scripts and vulnerabilities.">
+<title>DepSentinel: escanea tus dependencias antes de instalar o desplegar</title>
+<meta name="description" content="Herramienta de código abierto, gratuita y local que revisa tus dependencias (npm, PyPI, Go, Docker y GitHub Actions) y bloquea paquetes maliciosos, typosquatting, scripts de instalación peligrosos y vulnerabilidades.">
 <meta name="theme-color" content="#1F3DDB">
-<link rel="alternate" hreflang="es" href="../index.html">
-<link rel="alternate" hreflang="en" href="./">
+<link rel="alternate" hreflang="es" href="./">
+<link rel="alternate" hreflang="en" href="../index.html">
 <link rel="alternate" hreflang="x-default" href="../index.html">
-<meta property="og:title" content="DepSentinel: scan your project in 10 seconds">
-<meta property="og:description" content="Blocks malicious packages, typosquatting and vulnerable dependencies before they reach your machine or production. Free, local and open source.">
+<meta property="og:title" content="DepSentinel: escanea tu proyecto en 10 segundos">
+<meta property="og:description" content="Bloquea paquetes maliciosos, typosquatting y dependencias vulnerables antes de que lleguen a tu máquina o a producción. Gratis, local y de código abierto.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231F3DDB'/%3E%3Cpath d='M16 12 9 20M16 12l7 8' stroke='%23fff' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='9' r='3.2' fill='%23fff'/%3E%3Ccircle cx='9' cy='23' r='3.2' fill='%23fff'/%3E%3Ccircle cx='23' cy='23' r='3.2' fill='%23FF6B1A'/%3E%3C/svg%3E">
 <link rel="preload" href="../fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -58,7 +58,7 @@ code, pre { font-family: var(--mono); }
 .btn.line { border-color: var(--ink); color: var(--ink); background: transparent; }
 .btn.line:hover { background: rgba(18, 38, 63, .07); }
 
-/* ---------- Header and hero ---------- */
+/* ---------- Cabecera y héroe ---------- */
 .hero { background: var(--ultra); color: var(--white); padding-bottom: 88px; }
 .nav { display: flex; align-items: center; gap: 12px 28px; flex-wrap: wrap; padding: 22px 0; }
 .logo { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-stretch: 85%; font-size: 1.55rem; text-decoration: none; margin-right: auto; }
@@ -95,14 +95,14 @@ code, pre { font-family: var(--mono); }
 .caret { display: inline-block; width: .55em; height: 1.05em; background: var(--ink); vertical-align: -2px; margin-left: 1px; animation: blink 1s steps(2, start) infinite; }
 @keyframes blink { to { visibility: hidden; } }
 
-/* ---------- Sections ---------- */
+/* ---------- Secciones ---------- */
 section { padding: 96px 0; }
 @media (max-width: 700px) { section { padding: 64px 0; } .hero { padding-bottom: 64px; } }
 .kicker-free { display: none; }
 h2 { font-size: clamp(2.5rem, 5.4vw, 4.4rem); }
 .sub { font-size: 1.25rem; color: var(--muted); max-width: 40em; margin-top: 18px; }
 
-/* The problem, with numbers */
+/* El problema, con números */
 .problem { background: var(--navy); color: var(--navy-ink); }
 .problem .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 44px; align-items: center; }
 @media (min-width: 1000px) { .problem .grid { grid-template-columns: minmax(0, 4.6fr) minmax(0, 7.4fr); gap: 64px; } }
@@ -115,7 +115,7 @@ h2 { font-size: clamp(2.5rem, 5.4vw, 4.4rem); }
 .dots { width: 100%; height: auto; display: block; }
 .problem .after { margin-top: 28px; color: var(--white); font-size: 1.25rem; }
 
-/* What it detects */
+/* Qué detecta */
 .glossary { margin: 52px 0 0; padding: 0; display: grid; gap: 40px; }
 .glossary > div { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px 48px; }
 @media (min-width: 860px) { .glossary > div { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); } }
@@ -123,7 +123,7 @@ h2 { font-size: clamp(2.5rem, 5.4vw, 4.4rem); }
 .glossary dd { margin: 0; max-width: 40em; }
 .glossary dd code, .inline code { background: rgba(31, 61, 219, .09); border-radius: 5px; padding: 1px 6px; font-size: .92em; }
 
-/* How it works */
+/* Cómo se usa */
 .how { background: var(--white); }
 .how .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; align-items: start; margin-top: 48px; }
 @media (min-width: 1000px) { .how .grid { grid-template-columns: minmax(0, 6fr) minmax(0, 5.4fr); } }
@@ -137,7 +137,7 @@ h2 { font-size: clamp(2.5rem, 5.4vw, 4.4rem); }
 .code .copy { background: var(--ink); color: var(--white); }
 .code .copy:hover { background: #1C3A5E; }
 
-/* PR comment */
+/* Comentario de PR */
 .pr { background: var(--white); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 18px 40px -22px rgba(18, 38, 63, .45); overflow: hidden; font-size: .95rem; line-height: 1.5; }
 .pr-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #F3F6FA; border-bottom: 1px solid var(--line); font-size: .9rem; }
 .pr-head svg { width: 26px; height: 26px; }
@@ -153,7 +153,7 @@ h2 { font-size: clamp(2.5rem, 5.4vw, 4.4rem); }
 .pr-fail { margin: 12px 0 0; font-weight: 700; color: #B42318; }
 .pr-cap { color: var(--muted); font-size: .95rem; margin: 12px 4px 0; }
 
-/* Privacy */
+/* Privacidad */
 .privacy .cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; margin-top: 48px; }
 @media (min-width: 860px) { .privacy .cols { grid-template-columns: 1fr 1fr; gap: 64px; } }
 .privacy h3 { font-size: 2rem; margin-bottom: 14px; }
@@ -162,7 +162,7 @@ h2 { font-size: clamp(2.5rem, 5.4vw, 4.4rem); }
 .privacy .controls h3 { font-size: 1.7rem; }
 .privacy .controls p:last-child { margin-bottom: 0; }
 
-/* Free */
+/* Gratis */
 .free { background: var(--ultra); color: var(--white); }
 .free h2 { font-size: clamp(3rem, 8vw, 6.4rem); line-height: .92; }
 .free .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; align-items: end; }
@@ -182,47 +182,43 @@ footer a { color: var(--ink); }
 </style>
 </head>
 <body>
-<a class="skip" href="#content">Skip to content</a>
+<a class="skip" href="#contenido">Saltar al contenido</a>
 
 <header class="hero">
   <div class="wrap">
-    <nav class="nav" aria-label="Main">
-      <a class="logo" href="#" aria-label="DepSentinel, home">
+    <nav class="nav" aria-label="Principal">
+      <a class="logo" href="#" aria-label="DepSentinel, inicio">
         <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#fff" fill-opacity=".16"/><path d="M16 12 9 20M16 12l7 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="9" r="3.2" fill="#fff"/><circle cx="9" cy="23" r="3.2" fill="#fff"/><circle cx="23" cy="23" r="3.2" fill="#FF6B1A"/></svg>
         DepSentinel
       </a>
-      <a href="#what-it-detects">What it detects</a>
-      <a href="#how-it-works">How it works</a>
-      <a href="#privacy">Privacy</a>
-      <a href="transparency.html">Transparency</a>
+      <a href="#que-detecta">Qué detecta</a>
+      <a href="#como-se-usa">Cómo se usa</a>
+      <a href="#privacidad">Privacidad</a>
+      <a href="transparencia.html">Transparencia</a>
       <a href="https://github.com/AlejandroMolines/depsentinel">GitHub</a>
-      <a href="../index.html" hreflang="es" lang="es" data-lang="es">Español</a>
+      <a href="../index.html" hreflang="en" lang="en" data-lang="en">English</a>
     </nav>
 
-    <div class="hero-grid" id="content">
+    <div class="hero-grid" id="contenido">
       <div>
-        <h1>Scan your project in 10&nbsp;seconds.</h1>
-        <p class="lead">DepSentinel checks your dependencies before they are installed or deployed and blocks malicious packages, typosquatting, dangerous install scripts and vulnerabilities. Free, local and open source.</p>
+        <h1>Escanea tu proyecto en 10&nbsp;segundos.</h1>
+        <p class="lead">DepSentinel revisa tus dependencias antes de que se instalen o se desplieguen y bloquea paquetes maliciosos, typosquatting, scripts de instalación peligrosos y vulnerabilidades. Gratis, local y de código abierto.</p>
 
         <div class="install">
           <code>go install github.com/<wbr>AlejandroMolines/<wbr>depsentinel/<wbr>cmd/<wbr>depsentinel@latest</code>
-          <button class="copy" type="button" data-copy="go install github.com/AlejandroMolines/depsentinel/cmd/depsentinel@latest">Copy</button>
+          <button class="copy" type="button" data-copy="go install github.com/AlejandroMolines/depsentinel/cmd/depsentinel@latest">Copiar</button>
         </div>
-        <div class="install">
-          <code>docker run --rm -v $(pwd):/src depsentinel/<wbr>depsentinel scan /src</code>
-          <button class="copy" type="button" data-copy="docker run --rm -v $(pwd):/src depsentinel/depsentinel scan /src">Copy</button>
-        </div>
-        <p class="install-note">With Go 1.22 or later, or install nothing and use Docker. Then, inside your project: <code>depsentinel scan</code></p>
+        <p class="install-note">Con Go 1.22 o superior instalas el comando <code>depsentinel</code>. Después, dentro de tu proyecto: <code>depsentinel scan</code>. (También puedes usar Docker sin instalar nada: ver README y docs de instalación.)</p>
 
         <div class="cta">
-          <a class="btn solid" href="https://github.com/AlejandroMolines/depsentinel">View on GitHub</a>
-          <a class="btn ghost" href="#free">Support the project</a>
+          <a class="btn solid" href="https://github.com/AlejandroMolines/depsentinel">Ver en GitHub</a>
+          <a class="btn ghost" href="#gratis">Apoyar el proyecto</a>
         </div>
       </div>
 
-      <figure class="term" aria-label="Example output of depsentinel scan">
+      <figure class="term" aria-label="Ejemplo de la salida de depsentinel scan">
 <pre id="term" tabindex="0"><code><span class="l c">$ depsentinel scan --ci --fail-on high</span><span class="l"><b>DepSentinel</b> 0.1.0 · ~/online-store</span><span class="l">npm, Docker, GitHub Actions · 1328 packages · 4 manifests</span><span class="l"> </span><span class="l dim">SEVERITY  PACKAGE                       RULE           DETAIL</span><span class="l"><span class="crit">critical  </span>  npm event-stream@3.3.6        malicious       Known compromised version…</span><span class="l"><span class="crit">critical  </span>  npm minimist@1.2.0            vulnerability   Prototype Pollution in min…</span><span class="l"><span class="high">high     </span>  actions some-org/deploy@main  action-pinning  Action pinned to a mutable branch m…</span><span class="l"><span class="high">high     </span>  docker node:latest            remote-script   Downloads and runs a remote s…</span><span class="l"><span class="high">high     </span>  npm lodash@4.17.15            vulnerability   Command Injection in lodas…</span><span class="l"><span class="med">medium    </span>  npm reactt@1.0.0              typosquat       Possible typosquatting of «…</span><span class="l"><span class="low">low      </span>  npm core-js@3.30.2            install-script  Runs scripts on install…</span><span class="l"> </span><span class="l"><b>What to do first</b></span><span class="l">  • event-stream@3.3.6 — Remove it, reinstall from scratch and rotate credentials ac…</span><span class="l">  • minimist@1.2.0 — Update to 1.2.6 or later.</span><span class="l">  • some-org/deploy@main — Pin the action to the full commit SHA: uses: some-or…</span><span class="l"> </span><span class="l"><b>Summary</b>: 1328 packages · <span class="crit">2 critical</span> · <span class="high">3 high</span> · <span class="med">1 medium</span> · <span class="low">1 low</span></span><span class="l">Overall risk: <span class="crit">CRITICAL</span></span><span class="l fail">✖ 5 findings of severity high or higher: build fails.</span></code></pre>
-        <figcaption>Sample output, abridged, from a fictional project. Exit code 1: CI stops. The messages are currently in Spanish; English messages are on the roadmap.</figcaption>
+        <figcaption>Salida de ejemplo, abreviada, de un proyecto ficticio. Código de salida 1: el CI se detiene.</figcaption>
       </figure>
     </div>
   </div>
@@ -232,69 +228,69 @@ footer a { color: var(--ink); }
   <section class="problem" aria-labelledby="t-problema">
     <div class="wrap grid">
       <div>
-        <h2 id="t-problema">You chose 19 packages. 1,328 were installed.</h2>
-        <p class="sub">Measured with DepSentinel on the <code>package-lock.json</code> of a test React project. Each dot is a package installed on your machine and in your CI, and any of them can run code when installed. Almost nobody has read any of them.</p>
+        <h2 id="t-problema">Elegiste 19 paquetes. Se instalaron 1.328.</h2>
+        <p class="sub">Medido con DepSentinel sobre el <code>package-lock.json</code> de un proyecto React de prueba. Cada punto es un paquete que se instala en tu máquina y en tu CI, y cada uno puede ejecutar código al instalarse. Casi nadie ha leído ninguno.</p>
         <ul class="key">
-          <li><i class="dot" style="background:#fff"></i><span><strong>19</strong> the ones you wrote in <code>package.json</code></span></li>
-          <li><i class="dot" style="background:var(--orange)"></i><span><strong>3</strong> run scripts on your machine when installed</span></li>
-          <li><i class="dot" style="background:#6F88B8"></i><span><strong>1,306</strong> you never chose</span></li>
+          <li><i class="dot" style="background:#fff"></i><span><strong>19</strong> los que escribiste en <code>package.json</code></span></li>
+          <li><i class="dot" style="background:var(--orange)"></i><span><strong>3</strong> ejecutan scripts en tu máquina al instalarse</span></li>
+          <li><i class="dot" style="background:#6F88B8"></i><span><strong>1.306</strong> que nunca elegiste</span></li>
         </ul>
-        <p class="after">DepSentinel checks them all in seconds.</p>
+        <p class="after">DepSentinel los revisa todos en segundos.</p>
       </div>
-      <svg id="dots" class="dots" viewBox="0 0 960 520" role="img" aria-label="Map of 1,328 dots: 19 white, the packages the project declares; 3 orange, the ones that run scripts on install; and 1,306 blue, which arrive as dependencies of dependencies."></svg>
+      <svg id="dots" class="dots" viewBox="0 0 960 520" role="img" aria-label="Mapa de 1.328 puntos: 19 blancos, los paquetes que el proyecto declara; 3 naranjas, los que ejecutan scripts al instalarse; y 1.306 azules, que llegan como dependencias de dependencias."></svg>
     </div>
   </section>
 
-  <section id="what-it-detects" aria-labelledby="t-detecta">
+  <section id="que-detecta" aria-labelledby="t-detecta">
     <div class="wrap">
-      <h2 id="t-detecta">What it looks for in every scan</h2>
-      <p class="sub">Seven checks, each with an explanation and a concrete way to fix it.</p>
+      <h2 id="t-detecta">Lo que busca en cada escaneo</h2>
+      <p class="sub">Siete comprobaciones, todas con una explicación y una forma concreta de arreglarlas.</p>
       <dl class="glossary inline">
-        <div><dt>Known malicious packages</dt><dd>Every dependency is checked against OSV (the OpenSSF <code>MAL-*</code> advisories) and a signed local database that keeps working offline. It recognizes cases such as <code>event-stream@3.3.6</code>, <code>crossenv</code> or the hijacked versions of <code>ua-parser-js</code>.</dd></div>
-        <div><dt>Typosquatting</dt><dd>Names almost identical to popular ones: <code>reactt</code>, <code>lodassh</code>, <code>reqeusts</code>. It measures edit distance and package age so legitimate packages are not flagged.</dd></div>
-        <div><dt>Dangerous install scripts</dt><dd>Reads <code>preinstall</code>, <code>install</code> and <code>postinstall</code>. With <code>--deep</code> it downloads the package, checks its hash against the lockfile and reads the code those scripts run: remote downloads, reverse shells, credential theft.</dd></div>
-        <div><dt>Known vulnerabilities</dt><dd>CVE and GHSA advisories via OSV, with CVSS severity and the version that fixes them. <code>depsentinel fix</code> bumps direct dependencies and pins GitHub Actions to a SHA.</dd></div>
-        <div><dt>Abandoned dependencies</dt><dd>Packages with no releases for years, deprecated or yanked versions, and packages that no longer exist in the registry.</dd></div>
-        <div><dt>Odd version or maintainer changes</dt><dd><code>99.x</code> versions typical of dependency confusion, new publishers or maintainers right on the latest version, and tarballs that do not match the lockfile.</dd></div>
-        <div><dt>Beyond npm</dt><dd>PyPI, Go, Dockerfiles and GitHub Actions: <code>curl | sh</code> in a Dockerfile, actions not pinned to a SHA, <code>pull_request_target</code> checking out the PR, command injection in workflows.</dd></div>
+        <div><dt>Paquetes maliciosos conocidos</dt><dd>Cada dependencia se contrasta con OSV (los avisos <code>MAL-*</code> de OpenSSF) y con una base local firmada que sigue funcionando sin conexión. Reconoce casos como <code>event-stream@3.3.6</code>, <code>crossenv</code> o las versiones secuestradas de <code>ua-parser-js</code>.</dd></div>
+        <div><dt>Typosquatting</dt><dd>Nombres casi idénticos a los populares: <code>reactt</code>, <code>lodassh</code>, <code>reqeusts</code>. Mide la distancia de edición y la antigüedad del paquete para no marcar los legítimos.</dd></div>
+        <div><dt>Scripts de instalación peligrosos</dt><dd>Lee <code>preinstall</code>, <code>install</code> y <code>postinstall</code>. Con <code>--deep</code> descarga el paquete, comprueba su hash contra el lockfile y revisa el código que esos scripts ejecutan: descargas remotas, shells inversas, robo de credenciales.</dd></div>
+        <div><dt>Vulnerabilidades conocidas</dt><dd>CVE y GHSA vía OSV, con severidad CVSS y la versión que lo corrige. <code>depsentinel fix</code> sube las dependencias directas y fija las acciones de GitHub a un SHA.</dd></div>
+        <div><dt>Dependencias abandonadas</dt><dd>Paquetes sin versiones desde hace años, versiones deprecadas o retiradas, y paquetes que ya no existen en el registry.</dd></div>
+        <div><dt>Cambios raros de versión o mantenedor</dt><dd>Versiones <code>99.x</code> típicas de dependency confusion, publicadores o mantenedores nuevos justo en la versión reciente, y tarballs que no coinciden con el lockfile.</dd></div>
+        <div><dt>Más allá de npm</dt><dd>PyPI, Go, Dockerfiles y GitHub Actions: <code>curl | sh</code> en un Dockerfile, acciones sin fijar a un SHA, <code>pull_request_target</code> con checkout del PR, inyección de comandos en workflows.</dd></div>
       </dl>
     </div>
   </section>
 
-  <section class="how" id="how-it-works" aria-labelledby="t-uso">
+  <section class="how" id="como-se-usa" aria-labelledby="t-uso">
     <div class="wrap">
-      <h2 id="t-uso">From zero to blocking in CI</h2>
-      <p class="sub">Three steps. The first two need no account and no server.</p>
+      <h2 id="t-uso">De cero a bloquear en el CI</h2>
+      <p class="sub">Tres pasos. El primero y el segundo no necesitan cuenta ni servidor.</p>
       <div class="grid">
         <ol class="steps">
           <li>
             <div>
-              <h3>Install it</h3>
-              <div class="code"><pre><code>go install github.com/AlejandroMolines/depsentinel/cmd/depsentinel@latest</code></pre><button class="copy" type="button" data-copy="go install github.com/AlejandroMolines/depsentinel/cmd/depsentinel@latest">Copy</button></div>
-              <p>A single binary with no dependencies. There is also a Docker image, and binaries with checksums on every release.</p>
+              <h3>Instálalo</h3>
+              <div class="code"><pre><code>go install github.com/AlejandroMolines/depsentinel/cmd/depsentinel@latest</code></pre><button class="copy" type="button" data-copy="go install github.com/AlejandroMolines/depsentinel/cmd/depsentinel@latest">Copiar</button></div>
+              <p>Un único binario sin dependencias. También hay imagen de Docker y binarios en cada release, con su suma de comprobación.</p>
             </div>
           </li>
           <li>
             <div>
-              <h3>Scan your project</h3>
-              <div class="code"><pre><code>cd my-project
-depsentinel scan</code></pre><button class="copy" type="button" data-copy="depsentinel scan">Copy</button></div>
-              <p>It picks up whatever lockfiles, Dockerfiles and workflows it finds. <code>depsentinel report --html --open</code> opens the dashboard with the details of every package.</p>
+              <h3>Escanea tu proyecto</h3>
+              <div class="code"><pre><code>cd mi-proyecto
+depsentinel scan</code></pre><button class="copy" type="button" data-copy="depsentinel scan">Copiar</button></div>
+              <p>Detecta solo los lockfiles, Dockerfiles y workflows que encuentre. <code>depsentinel report --html --open</code> abre el panel con el detalle de cada paquete.</p>
             </div>
           </li>
           <li>
             <div>
-              <h3>Make CI enforce it</h3>
+              <h3>Que el CI lo exija</h3>
               <div class="code"><pre><code>- uses: AlejandroMolines/depsentinel/action@v1
   with:
-    fail-on: high</code></pre><button class="copy" type="button" data-copy="- uses: AlejandroMolines/depsentinel/action@v1&#10;  with:&#10;    fail-on: high">Copy</button></div>
-              <p>It comments the result on every pull request and fails the build on high risk. An exception only counts if it carries a written justification.</p>
+    fail-on: high</code></pre><button class="copy" type="button" data-copy="- uses: AlejandroMolines/depsentinel/action@v1&#10;  with:&#10;    fail-on: high">Copiar</button></div>
+              <p>Comenta el resultado en cada pull request y falla el build si hay riesgo alto. Una excepción solo vale si lleva justificación escrita.</p>
             </div>
           </li>
         </ol>
 
         <div>
-          <div class="pr" role="img" aria-label="Example DepSentinel comment on a pull request">
+          <div class="pr" role="img" aria-label="Example of a DepSentinel comment on a pull request">
             <div class="pr-head">
               <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="16" fill="#1F3DDB"/><path d="M16 12 9 20M16 12l7 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="9" r="3.2" fill="#fff"/><circle cx="9" cy="23" r="3.2" fill="#fff"/><circle cx="23" cy="23" r="3.2" fill="#FF6B1A"/></svg>
               <strong>depsentinel</strong> <span>commented on this pull request</span>
@@ -315,50 +311,50 @@ depsentinel scan</code></pre><button class="copy" type="button" data-copy="depse
               <p class="pr-fail">The check fails: 2 finding(s) of severity high or higher.</p>
             </div>
           </div>
-          <p class="pr-cap">This is the comment DepSentinel leaves (and updates, without duplicating it) on every pull request. The comment text is currently in Spanish.</p>
+          <p class="pr-cap">This is what the comment DepSentinel leaves (and updates, without duplicating) on every pull request looks like.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="privacy" id="privacy" aria-labelledby="t-priv">
+  <section class="privacy" id="privacidad" aria-labelledby="t-priv">
     <div class="wrap">
-      <h2 id="t-priv">What leaves your machine, and what does not</h2>
-      <p class="sub">DepSentinel runs on your computer or in your CI. There is no account, no server of ours and no telemetry.</p>
+      <h2 id="t-priv">Qué sale de tu máquina, y qué no</h2>
+      <p class="sub">DepSentinel funciona en tu equipo o en tu CI. No hay cuenta, no hay servidor propio y no hay telemetría.</p>
       <div class="cols">
         <div>
-          <h3>Leaves, only when online</h3>
+          <h3>Sale, solo si hay conexión</h3>
           <ul>
-            <li>The name and version of each public package, to <code>api.osv.dev</code>, to look up security advisories.</li>
-            <li>The package name, to <code>registry.npmjs.org</code>, <code>pypi.org</code> or <code>proxy.golang.org</code>, to read dates and maintainers.</li>
+            <li>El nombre y la versión de cada paquete público, hacia <code>api.osv.dev</code>, para consultar avisos de seguridad.</li>
+            <li>El nombre del paquete, hacia <code>registry.npmjs.org</code>, <code>pypi.org</code> o <code>proxy.golang.org</code>, para leer fechas y mantenedores.</li>
           </ul>
         </div>
         <div>
-          <h3>Never leaves</h3>
+          <h3>No sale nunca</h3>
           <ul>
-            <li>Your code, your full lockfile, your machine's paths, tokens and environment variables.</li>
-            <li>Packages installed from git, local paths or URLs.</li>
+            <li>Tu código, tu lockfile completo, las rutas de tu equipo, tokens y variables de entorno.</li>
+            <li>Los paquetes instalados desde git, rutas locales o URLs.</li>
           </ul>
         </div>
       </div>
       <div class="controls inline">
-        <h3>You decide</h3>
-        <p><code>--offline</code> opens no connection at all and uses only the local rules. <code>--no-osv</code> and <code>--no-registry</code> switch each source off separately, and <code>DEPSENTINEL_OSV_URL</code> points to an internal mirror. The malicious-package database is downloaded with <code>depsentinel db update</code> and verified with an Ed25519 signature before use. Only two commands that you run on purpose reach other places: <code>db update</code> downloads the feed from the repository and <code>fix</code> queries <code>api.github.com</code> to resolve the SHA of an action.</p>
+        <h3>Tú decides</h3>
+        <p><code>--offline</code> no abre ninguna conexión y usa solo las reglas locales. <code>--no-osv</code> y <code>--no-registry</code> apagan cada fuente por separado, y <code>DEPSENTINEL_OSV_URL</code> apunta a un espejo interno. La base de datos de paquetes maliciosos se descarga con <code>depsentinel db update</code> y se verifica con una firma Ed25519 antes de usarla. Solo dos comandos que tú lanzas a propósito salen a otros sitios: <code>db update</code> descarga el feed del repositorio y <code>fix</code> consulta <code>api.github.com</code> para resolver el SHA de una acción.</p>
       </div>
     </div>
   </section>
 
-  <section class="free" id="free" aria-labelledby="t-gratis">
+  <section class="free" id="gratis" aria-labelledby="t-gratis">
     <div class="wrap grid">
       <div>
-        <h2 id="t-gratis">Free. Always.</h2>
+        <h2 id="t-gratis">Gratis. Siempre.</h2>
       </div>
       <div>
-        <p>Free for individuals, open-source projects and education. Donations are not available yet: when they are, they will pay for the domain, the feed servers and security audits. Companies will be able to sponsor, but no sponsorship or donation will unlock features.</p>
+        <p>Gratis para personas, proyectos de código abierto y educación. Las donaciones aún no están disponibles: cuando lo estén, se usarán para el dominio, los servidores del feed y las auditorías de seguridad. Las empresas podrán patrocinar, pero ningún patrocinio ni donación desbloqueará funciones.</p>
         <div class="links">
-          <span class="btn ghost" aria-disabled="true">Donations: coming soon</span>
+          <span class="btn ghost" aria-disabled="true">Donaciones: próximamente</span>
         </div>
-        <p class="fine">Every month we publish how much comes in and what it is spent on: <a href="transparency.html">see the accounts</a>.</p>
+        <p class="fine">Cada mes publicamos cuánto entra y en qué se gasta: <a href="transparencia.html">ver las cuentas</a>.</p>
       </div>
     </div>
   </section>
@@ -366,19 +362,19 @@ depsentinel scan</code></pre><button class="copy" type="button" data-copy="depse
 
 <footer>
   <div class="wrap">
-    <a class="logo" href="#" aria-label="DepSentinel, home">
+    <a class="logo" href="#" aria-label="DepSentinel, inicio">
       <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1F3DDB"/><path d="M16 12 9 20M16 12l7 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="9" r="3.2" fill="#fff"/><circle cx="9" cy="23" r="3.2" fill="#fff"/><circle cx="23" cy="23" r="3.2" fill="#FF6B1A"/></svg>
       DepSentinel
     </a>
-    <span>Free software under the MIT license.</span>
-    <nav aria-label="Footer">
-      <a href="https://github.com/AlejandroMolines/depsentinel">Code</a>
-      <a href="https://github.com/AlejandroMolines/depsentinel/blob/main/docs/en/rules.md">Rules</a>
-      <a href="https://github.com/AlejandroMolines/depsentinel/blob/main/docs/en/installation.md">Installation</a>
-      <a href="https://github.com/AlejandroMolines/depsentinel/blob/main/SECURITY.en.md">Security</a>
-      <a href="https://github.com/AlejandroMolines/depsentinel/issues/new?template=falso-positivo.yml">False positives</a>
-      <a href="transparency.html">Transparency</a>
-      <a href="../index.html" hreflang="es" lang="es" data-lang="es">Español</a>
+    <span>Software libre con licencia MIT.</span>
+    <nav aria-label="Pie">
+      <a href="https://github.com/AlejandroMolines/depsentinel">Código</a>
+      <a href="https://github.com/AlejandroMolines/depsentinel/blob/main/docs/es/reglas.md">Reglas</a>
+      <a href="https://github.com/AlejandroMolines/depsentinel/blob/main/docs/es/instalacion.md">Instalación</a>
+      <a href="https://github.com/AlejandroMolines/depsentinel/blob/main/SECURITY.es.md">Seguridad</a>
+      <a href="https://github.com/AlejandroMolines/depsentinel/issues/new?template=falso-positivo.yml">Falsos positivos</a>
+      <a href="transparencia.html">Transparencia</a>
+      <a href="../index.html" hreflang="en" lang="en" data-lang="en">English</a>
     </nav>
   </div>
 </footer>
@@ -386,23 +382,23 @@ depsentinel scan</code></pre><button class="copy" type="button" data-copy="depse
 <script>
 (function () {
   'use strict';
-  // Language: a saved choice wins; Spanish speakers who picked Spanish are sent back to the Spanish site.
+  // Idioma: se respeta la elección guardada; la primera vez se usa el idioma del navegador.
   try {
     var pref = localStorage.getItem('ds-lang');
-    if (pref === 'es') { location.replace('../index.html' + location.hash); return; }
-  } catch (e) { /* no storage */ }
+    if (!pref && /^en/i.test(navigator.language || '')) { location.replace('../index.html' + location.hash); return; }
+  } catch (e) { /* sin almacenamiento */ }
   document.querySelectorAll('[data-lang]').forEach(function (a) {
-    a.addEventListener('click', function () { try { localStorage.setItem('ds-lang', a.getAttribute('data-lang')); } catch (e) { /* nothing */ } });
+    a.addEventListener('click', function () { try { localStorage.setItem('ds-lang', a.getAttribute('data-lang')); } catch (e) { /* nada */ } });
   });
   document.documentElement.classList.add('js');
 
-  // Copy to clipboard
+  // Copiar al portapapeles
   document.querySelectorAll('[data-copy]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var text = btn.getAttribute('data-copy');
       var done = function () {
         var old = btn.textContent;
-        btn.textContent = 'Copied';
+        btn.textContent = 'Copiado';
         setTimeout(function () { btn.textContent = old; }, 1800);
       };
       if (navigator.clipboard && window.isSecureContext) {
@@ -412,13 +408,13 @@ depsentinel scan</code></pre><button class="copy" type="button" data-copy="depse
         var ta = document.createElement('textarea');
         ta.value = text; ta.setAttribute('aria-hidden', 'true'); ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
         document.body.appendChild(ta); ta.select();
-        try { document.execCommand('copy'); done(); } catch (e) { /* no clipboard */ }
+        try { document.execCommand('copy'); done(); } catch (e) { /* sin portapapeles */ }
         document.body.removeChild(ta);
       }
     });
   });
 
-  // Dependency map: 19 direct, 3 with install scripts and the rest, measured on a real project
+  // Mapa de dependencias: 19 directas, 3 con scripts de instalación y el resto, medido en un proyecto real
   var svg = document.getElementById('dots');
   if (svg) {
     var NS = 'http://www.w3.org/2000/svg';
@@ -447,7 +443,7 @@ depsentinel scan</code></pre><button class="copy" type="button" data-copy="depse
     svg.appendChild(frag);
   }
 
-  // Terminal: the command is typed and the lines appear, once
+  // Terminal: se escribe el comando y aparecen las líneas, una sola vez
   var pre = document.getElementById('term');
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (pre && !reduce) {

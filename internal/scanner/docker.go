@@ -76,7 +76,7 @@ func imageFindings(p *model.Package, ref ImageRef, rel string, line int) []model
 			"Fija una versión concreta y, mejor, el digest: FROM "+ref.Name+":<versión>@sha256:<digest>"))
 	} else if ref.Digest == "" {
 		out = append(out, staticFinding(model.Docker, p.Name, p.Version, rel, line, "image-digest", "DS-DOCKER-NODIGEST", model.SeverityLow,
-			"Imagen sin digest fijado",
+			"Image without a pinned digest",
 			"Los tags son mutables: quien controle el repositorio puede cambiar el contenido de "+ref.Name+":"+ref.Tag+".",
 			"Añade el digest: FROM "+ref.Name+":"+ref.Tag+"@sha256:<digest>"))
 	}

@@ -1,4 +1,4 @@
-**Español** | [English](en/rules.md)
+**Español** | [English](../rules.md)
 
 # Reglas, configuración y referencia
 

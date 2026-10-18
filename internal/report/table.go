@@ -105,16 +105,16 @@ func Table(w io.Writer, rep *model.Report, o TableOptions) {
 		}
 		fmt.Fprintf(w, "%s · %s · %s\n\n", strings.Join(eco, ", "), count(rep.Summary.Packages, "paquete", "paquetes"), count(len(rep.Sources), "manifiesto", "manifiestos"))
 	} else {
-		fmt.Fprintln(w, "No se encontraron manifiestos soportados (package-lock.json, requirements.txt, go.mod, Dockerfile, workflows de GitHub Actions…).")
+		fmt.Fprintln(w, "No supported manifests found (package-lock.json, requirements.txt, go.mod, Dockerfile, GitHub Actions workflows…).")
 		fmt.Fprintln(w)
 	}
 
 	shown := Filter(rep.Findings, o.MinSeverity, o.Only)
 	if len(shown) == 0 {
 		if len(rep.Findings) == 0 {
-			fmt.Fprintln(w, c.Green("✔ Sin hallazgos."))
+			fmt.Fprintln(w, c.Green("✔ No findings."))
 		} else {
-			fmt.Fprintln(w, c.Green("✔ Sin hallazgos en las severidades seleccionadas."))
+			fmt.Fprintln(w, c.Green("✔ No findings in the selected severities."))
 		}
 	} else {
 		type row struct {
@@ -123,12 +123,12 @@ func Table(w io.Writer, rep *model.Report, o TableOptions) {
 			findings model.Finding
 		}
 		rows := make([]row, 0, len(shown))
-		wSev, wPkg, wRule := len("SEVERIDAD"), len("PAQUETE"), len("REGLA")
+		wSev, wPkg, wRule := len("SEVERITY"), len("PACKAGE"), len("RULE")
 		for _, f := range shown {
 			pkg := fmt.Sprintf("%s %s", f.Ecosystem, FormatPackage(f))
 			detail := oneLine(f.Title)
 			if f.FixedIn != "" {
-				detail += " (corregido en " + f.FixedIn + ")"
+				detail += " (fixed in " + f.FixedIn + ")"
 			}
 			r := row{sev: f.Severity, cells: [4]string{f.Severity.Label(), pkg, f.Rule, detail}, findings: f}
 			rows = append(rows, r)
@@ -141,7 +141,7 @@ func Table(w io.Writer, rep *model.Report, o TableOptions) {
 		if detailW < 24 {
 			detailW = 24
 		}
-		fmt.Fprintf(w, "%s\n", c.Dim(pad("SEVERIDAD", wSev)+"  "+pad("PAQUETE", wPkg)+"  "+pad("REGLA", wRule)+"  DETALLE"))
+		fmt.Fprintf(w, "%s\n", c.Dim(pad("SEVERITY", wSev)+"  "+pad("PACKAGE", wPkg)+"  "+pad("RULE", wRule)+"  DETAIL"))
 		for _, r := range rows {
 			fmt.Fprintf(w, "%s  %s  %s  %s\n",
 				c.Severity(r.sev, pad(r.cells[0], wSev)),
@@ -159,10 +159,10 @@ func Table(w io.Writer, rep *model.Report, o TableOptions) {
 			}
 		}
 		if len(fixes) > 0 {
-			fmt.Fprintf(w, "\n%s\n", c.Bold("Qué hacer primero"))
+			fmt.Fprintf(w, "\n%s\n", c.Bold("What to do first"))
 			for i, l := range fixes {
 				if i >= 8 {
-					fmt.Fprintf(w, "  … y %d más (usa --format json para ver todo)\n", len(fixes)-i)
+					fmt.Fprintf(w, "  … and %d more (use --format json to see all)\n", len(fixes)-i)
 					break
 				}
 				fmt.Fprintln(w, trunc(l, o.Width))
@@ -172,22 +172,22 @@ func Table(w io.Writer, rep *model.Report, o TableOptions) {
 
 	s := rep.Summary
 	fmt.Fprintf(w, "\n%s: %s · %s · %s · %s · %s",
-		c.Bold("Resumen"), count(s.Packages, "paquete", "paquetes"),
-		c.Severity(model.SeverityCritical, count(s.BySeverity["critical"], "crítico", "críticos")),
-		c.Severity(model.SeverityHigh, count(s.BySeverity["high"], "alto", "altos")),
-		c.Severity(model.SeverityMedium, count(s.BySeverity["medium"], "medio", "medios")),
-		c.Severity(model.SeverityLow, count(s.BySeverity["low"], "bajo", "bajos")))
+		c.Bold("Summary"), count(s.Packages, "package", "packages"),
+		c.Severity(model.SeverityCritical, count(s.BySeverity["critical"], "critical", "critical")),
+		c.Severity(model.SeverityHigh, count(s.BySeverity["high"], "high", "high")),
+		c.Severity(model.SeverityMedium, count(s.BySeverity["medium"], "medium", "medium")),
+		c.Severity(model.SeverityLow, count(s.BySeverity["low"], "low", "low")))
 	if s.Suppressed > 0 {
-		fmt.Fprintf(w, " · %d en lista blanca", s.Suppressed)
+		fmt.Fprintf(w, " · %d allowlisted", s.Suppressed)
 	}
 	sev, _ := model.ParseSeverity(s.RiskLevel)
-	fmt.Fprintf(w, "\nRiesgo global: %s\n", c.Severity(sev, strings.ToUpper(sev.Label())))
+	fmt.Fprintf(w, "\nOverall risk: %s\n", c.Severity(sev, strings.ToUpper(sev.Label())))
 	if o.FailOn > model.SeverityNone {
 		n := len(Filter(rep.Findings, o.FailOn, o.Only))
 		if n > 0 {
-			fmt.Fprintf(w, "%s\n", c.Severity(model.SeverityHigh, fmt.Sprintf("✖ %s de severidad %s o superior: el build falla.", count(n, "hallazgo", "hallazgos"), o.FailOn.Label())))
+			fmt.Fprintf(w, "%s\n", c.Severity(model.SeverityHigh, fmt.Sprintf("✖ %s of severity %s or higher: build fails.", count(n, "finding", "findings"), o.FailOn.Label())))
 		} else {
-			fmt.Fprintf(w, "%s\n", c.Green(fmt.Sprintf("✔ Ningún hallazgo de severidad %s o superior.", o.FailOn.Label())))
+			fmt.Fprintf(w, "%s\n", c.Green(fmt.Sprintf("✔ No findings of severity %s or higher.", o.FailOn.Label())))
 		}
 	}
 }

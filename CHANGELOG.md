@@ -1,21 +1,21 @@
-**Español** | [English](CHANGELOG.en.md)
+[Español](CHANGELOG.es.md) | **English**
 
-# Cambios
+# Changelog
 
-Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/); versionado semántico.
+Based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); semantic versioning.
 
-## [0.1.0] — Primera versión
+## [0.1.0] — First release
 
-### Añadido
+### Added
 - CLI: `init`, `scan`, `audit`, `fix`, `allowlist`, `sbom`, `report`, `db`, `version`.
-- Ecosistemas: npm (lockfile v1/v2/v3), PyPI (requirements, Pipfile.lock, poetry.lock, uv.lock), Go (`go.mod`),
-  Docker (Dockerfile y compose) y GitHub Actions.
-- Reglas: malware conocido (OSV y base local), typosquatting, scripts de instalación (con `--deep`: inspección del
-  tarball y verificación de su hash), vulnerabilidades con CVSS v3 y versión corregida, abandono/deprecación,
-  procedencia y anomalías de versión, orígenes inseguros, endurecimiento de Dockerfiles y workflows.
-- Lista blanca con justificación obligatoria y caducidad; el malware conocido exige excepción explícita.
-- Salidas: tabla, JSON, Markdown para PR, anotaciones de GitHub, panel HTML y SBOM CycloneDX 1.5.
-- GitHub Action (compuesta) con comentario de PR actualizable, resumen del job y artefacto.
-- Base de datos local con semilla embebida y feed firmado con Ed25519 (`db update`, `cmd/dbtool`).
-- API pública en Go (`pkg/api`).
-- Landing, panel y página de transparencia.
+- Ecosystems: npm (lockfile v1/v2/v3), PyPI (requirements, Pipfile.lock, poetry.lock, uv.lock), Go (`go.mod`),
+  Docker (Dockerfile and compose) and GitHub Actions.
+- Rules: known malware (OSV and local database), typosquatting, install scripts (with `--deep`: tarball inspection and
+  hash verification), vulnerabilities with CVSS v3 and fixed version, abandonment/deprecation, provenance and version
+  anomalies, insecure sources, Dockerfile and workflow hardening.
+- Allowlist with mandatory justification and expiry; known malware requires an explicit exception.
+- Outputs: table, JSON, PR Markdown, GitHub annotations, HTML dashboard and CycloneDX 1.5 SBOM.
+- GitHub Action (composite) with updatable PR comment, job summary and artifact.
+- Local database with embedded seed and Ed25519-signed feed (`db update`, `cmd/dbtool`).
+- Public Go API (`pkg/api`).
+- Bilingual (Spanish/English) website and documentation; transparency page.

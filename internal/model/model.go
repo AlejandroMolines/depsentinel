@@ -99,19 +99,19 @@ func (s Severity) String() string {
 	return "none"
 }
 
-// Label devuelve el nombre en español para mostrar a personas.
+// Label devuelve el nombre en inglés para mostrar a personas.
 func (s Severity) Label() string {
 	switch s {
 	case SeverityLow:
-		return "bajo"
+		return "low"
 	case SeverityMedium:
-		return "medio"
+		return "medium"
 	case SeverityHigh:
-		return "alto"
+		return "high"
 	case SeverityCritical:
-		return "crítico"
+		return "critical"
 	}
-	return "ninguno"
+	return "none"
 }
 
 // ParseSeverity acepta nombres en inglés y español.
@@ -128,7 +128,7 @@ func ParseSeverity(v string) (Severity, error) {
 	case "critical", "crit", "critico", "crítico", "critica", "crítica":
 		return SeverityCritical, nil
 	}
-	return SeverityNone, fmt.Errorf("severidad desconocida %q (usa: low, medium, high, critical o none)", v)
+	return SeverityNone, fmt.Errorf("unknown severity %q (use: low, medium, high, critical or none)", v)
 }
 
 // ParseSeverityList parsea una lista separada por comas ("high,critical").

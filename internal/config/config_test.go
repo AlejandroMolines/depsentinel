@@ -41,7 +41,7 @@ func TestLoadRejectsMistakes(t *testing.T) {
 		return p
 	}
 	cases := map[string]string{
-		`{"fail_on":"urgente"}`:                               "severidad",
+		`{"fail_on":"urgente"}`:                               "severity",
 		`{"disabled_rules":["typosquating"]}`:                 "regla desconocida",
 		`{"ecosystems":["cobol"]}`:                            "ecosistema",
 		`{"network":{"timeout_seconds":0}}`:                   "timeout",
