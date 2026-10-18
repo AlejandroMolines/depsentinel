@@ -109,7 +109,7 @@ func (c *Config) Validate() error {
 			continue
 		}
 		if _, ok := model.ParseEcosystem(e); !ok {
-			return fmt.Errorf("ecosystems: ecosistema desconocido %q", e)
+			return fmt.Errorf("ecosystems: unknown ecosystem %q", e)
 		}
 	}
 	known := map[string]bool{}

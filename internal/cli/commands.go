@@ -209,7 +209,7 @@ func splitNameVersion(arg string) (string, string) {
 
 func (a *App) cmdAllowlist(args []string) error {
 	if len(args) == 0 {
-		return usageErr("uso: depsentinel allowlist <add|list|remove> ...")
+		return usageErr("usage: depsentinel allowlist <add|list|remove> ...")
 	}
 	sub, rest := args[0], args[1:]
 	fs := newFlagSet("allowlist "+sub, a.Stderr, "[paquete[@versión]] [opciones]")
@@ -258,7 +258,7 @@ func (a *App) cmdAllowlist(args []string) error {
 		return tw.Flush()
 	case "add", "remove", "rm":
 		if len(pos) != 1 {
-			return usageErr("uso: depsentinel allowlist %s <paquete[@versión]> [opciones]", sub)
+			return usageErr("usage: depsentinel allowlist %s <package[@version]> [options]", sub)
 		}
 		name, v := splitNameVersion(pos[0])
 		if v != "" && *ver != "" && v != *ver {
@@ -363,7 +363,7 @@ func (a *App) cmdSBOM(args []string) error {
 		return err
 	}
 	for _, w := range inv.Warnings {
-		fmt.Fprintf(a.Stderr, "aviso: %s\n", w)
+		fmt.Fprintf(a.Stderr, "warning: %s\n", w)
 	}
 	if *output == "" {
 		_, err = a.Stdout.Write(data)
@@ -379,12 +379,12 @@ func (a *App) cmdSBOM(args []string) error {
 // ---------- report ----------
 
 func (a *App) cmdReport(ctx context.Context, args []string) error {
-	fs := newFlagSet("report", a.Stderr, "[ruta] [opciones]\n\nGenera el panel HTML de un escaneo nuevo o de un informe JSON existente (--input).")
+	fs := newFlagSet("report", a.Stderr, "[path] [options]\n\nGenerate the HTML panel from a new scan or an existing JSON report (--input).")
 	var f scanFlags
 	f.register(fs, false)
-	fs.Bool("html", true, "genera el panel HTML (es el único formato)")
-	open := fs.Bool("open", false, "abre el informe en el navegador")
-	input := fs.String("input", "", "usa este informe JSON (de scan --format json) en lugar de escanear")
+	fs.Bool("html", true, "generate the HTML panel (the only format)")
+	open := fs.Bool("open", false, "open the report in the browser")
+	input := fs.String("input", "", "use this JSON report (from scan --format json) instead of scanning")
 	pos, err := parseInterspersed(fs, args)
 	if err != nil {
 		return err
@@ -425,10 +425,10 @@ func (a *App) cmdReport(ctx context.Context, args []string) error {
 		return err
 	}
 	abs, _ := filepath.Abs(out)
-	fmt.Fprintf(a.Stdout, "Informe escrito en %s\n", abs)
+	fmt.Fprintf(a.Stdout, "Report written to %s\n", abs)
 	if *open {
 		if err := openBrowser(abs); err != nil {
-			fmt.Fprintf(a.Stderr, "aviso: no pude abrir el navegador: %v\n", err)
+			fmt.Fprintf(a.Stderr, "warning: could not open the browser: %v\n", err)
 		}
 	}
 	return nil
@@ -438,15 +438,15 @@ func (a *App) cmdReport(ctx context.Context, args []string) error {
 
 func (a *App) cmdDB(ctx context.Context, args []string) error {
 	if len(args) == 0 {
-		return usageErr("uso: depsentinel db <update|status|clean>")
+		return usageErr("usage: depsentinel db <update|status|clean>")
 	}
 	sub, rest := args[0], args[1:]
-	fs := newFlagSet("db "+sub, a.Stderr, "[opciones]")
-	feed := fs.String("feed-url", "", "URL del feed (por defecto el del repositorio o feed_url de la configuración)")
-	pubkey := fs.String("pubkey", "", "clave pública Ed25519 (base64) para verificar la firma")
-	unsigned := fs.Bool("allow-unsigned", false, "acepta un feed sin firma verificada (no recomendado)")
+	fs := newFlagSet("db "+sub, a.Stderr, "[options]")
+	feed := fs.String("feed-url", "", "feed URL (default: repository or feed_url from config)")
+	pubkey := fs.String("pubkey", "", "Ed25519 public key (base64) to verify the signature")
+	unsigned := fs.Bool("allow-unsigned", false, "accept an unverified feed (not recommended)")
 	cfgFlag := fs.String("config", "", "ruta de .depsentinel.json")
-	all := fs.Bool("all", false, "clean: borra también el feed descargado")
+	all := fs.Bool("all", false, "clean: also delete the downloaded feed")
 	if _, err := parseInterspersed(fs, rest); err != nil {
 		return err
 	}

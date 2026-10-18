@@ -12,7 +12,7 @@ import (
 // la instalación real con scripts habilitados.
 func (a *App) cmdGuard(ctx context.Context, args []string) error {
 	if len(args) == 0 {
-		return usageErr("uso: depsentinel guard <npm|yarn|pnpm> <install|add|i> [opciones]\n       depsentinel guard -- <comando...>")
+		return usageErr("usage: depsentinel guard <npm|yarn|pnpm> <install|add|i> [options]\n       depsentinel guard -- <command...>")
 	}
 
 	// Forma genérica: depsentinel guard -- <comando...>

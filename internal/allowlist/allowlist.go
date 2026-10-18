@@ -84,7 +84,7 @@ func (e Entry) Validate() error {
 	}
 	if e.Ecosystem != "" && e.Ecosystem != "*" {
 		if _, ok := model.ParseEcosystem(e.Ecosystem); !ok {
-			return fmt.Errorf("ecosistema desconocido %q", e.Ecosystem)
+			return fmt.Errorf("unknown ecosystem %q", e.Ecosystem)
 		}
 	}
 	if e.Expires != "" {

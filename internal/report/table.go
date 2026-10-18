@@ -208,6 +208,6 @@ func Warnings(w io.Writer, rep *model.Report, c term.Palette) {
 	sort.Strings(ws)
 	fmt.Fprintln(w)
 	for _, x := range ws {
-		fmt.Fprintf(w, "%s %s\n", c.Yellow("aviso:"), x)
+		fmt.Fprintf(w, "%s %s\n", c.Yellow("warning:"), x)
 	}
 }

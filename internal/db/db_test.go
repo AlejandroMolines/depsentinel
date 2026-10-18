@@ -135,7 +135,7 @@ func TestUpdateFlow(t *testing.T) {
 		t.Errorf("con otra clave debe fallar: %v", err)
 	}
 	// sin clave configurada
-	if _, err := Update(context.Background(), UpdateOptions{FeedURL: srv.URL, CacheDir: t.TempDir(), HTTP: h, Now: time.Now()}); err == nil || !strings.Contains(err.Error(), "clave pública") {
+	if _, err := Update(context.Background(), UpdateOptions{FeedURL: srv.URL, CacheDir: t.TempDir(), HTTP: h, Now: time.Now()}); err == nil || !strings.Contains(err.Error(), "public key") {
 		t.Errorf("sin clave debe fallar con una explicación: %v", err)
 	}
 	// sin firma pero permitido explícitamente

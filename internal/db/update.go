@@ -92,7 +92,7 @@ func Update(ctx context.Context, o UpdateOptions) (*UpdateResult, error) {
 	}
 	var idx feedIndex
 	if err := json.Unmarshal(idxBytes, &idx); err != nil || idx.Schema != 1 {
-		return nil, errors.New("índice del feed con formato desconocido")
+		return nil, errors.New("feed index with unknown format")
 	}
 	dir := filepath.Join(o.CacheDir, "feed")
 	if err := os.MkdirAll(dir, 0o755); err != nil {
@@ -119,7 +119,7 @@ func Update(ctx context.Context, o UpdateOptions) (*UpdateResult, error) {
 			Schema int `json:"schema"`
 		}
 		if err := json.Unmarshal(b, &probe); err != nil || probe.Schema != 1 {
-			return nil, fmt.Errorf("%s tiene un formato desconocido", name)
+			return nil, fmt.Errorf("%s has an unknown format", name)
 		}
 		staged[name] = b
 	}

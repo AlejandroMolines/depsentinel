@@ -198,7 +198,7 @@ func TestSBOMAndReport(t *testing.T) {
 	jsonReport := filepath.Join(t.TempDir(), "r.json")
 	run(t, "scan", dir, "--format", "json", "-o", jsonReport)
 	html := filepath.Join(t.TempDir(), "r.html")
-	if code, out, _ := run(t, "report", "--html", "--input", jsonReport, "-o", html); code != 0 || !strings.Contains(out, "Informe escrito") {
+	if code, out, _ := run(t, "report", "--html", "--input", jsonReport, "-o", html); code != 0 || !strings.Contains(out, "Report written") {
 		t.Fatalf("report --input: %d %q", code, out)
 	}
 	if b, _ := os.ReadFile(html); !strings.Contains(string(b), `"tool":"depsentinel"`) {

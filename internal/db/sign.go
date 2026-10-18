@@ -30,7 +30,7 @@ func GenerateKey() (pub, priv string, err error) {
 func Sign(privB64 string, data []byte) (string, error) {
 	raw, err := base64.StdEncoding.DecodeString(strings.TrimSpace(privB64))
 	if err != nil || len(raw) != ed25519.PrivateKeySize {
-		return "", errors.New("clave privada Ed25519 inválida")
+		return "", errors.New("invalid Ed25519 private key")
 	}
 	return base64.StdEncoding.EncodeToString(ed25519.Sign(ed25519.PrivateKey(raw), data)), nil
 }
@@ -39,14 +39,14 @@ func Sign(privB64 string, data []byte) (string, error) {
 func Verify(pubB64 string, data []byte, sigB64 string) error {
 	pub, err := base64.StdEncoding.DecodeString(strings.TrimSpace(pubB64))
 	if err != nil || len(pub) != ed25519.PublicKeySize {
-		return errors.New("clave pública Ed25519 inválida")
+		return errors.New("invalid Ed25519 public key")
 	}
 	sig, err := base64.StdEncoding.DecodeString(strings.TrimSpace(sigB64))
 	if err != nil {
-		return errors.New("firma con formato inválido")
+		return errors.New("invalid signature format")
 	}
 	if !ed25519.Verify(ed25519.PublicKey(pub), data, sig) {
-		return errors.New("la firma no corresponde al contenido")
+		return errors.New("signature does not match content")
 	}
 	return nil
 }
@@ -95,6 +95,6 @@ func sha256Hex(b []byte) string {
 	return hex.EncodeToString(sum[:])
 }
 
-var errNoKey = fmt.Errorf("no hay clave pública configurada, así que no puedo verificar la firma del feed.\n" +
-	"  Configura la clave con --pubkey <base64> (o feed_public_key en .depsentinel.json),\n" +
-	"  o usa --allow-unsigned bajo tu responsabilidad")
+var errNoKey = fmt.Errorf("no public key configured, so the feed signature cannot be verified.\n" +
+	"  Set the key with --pubkey <base64> (or feed_public_key in .depsentinel.json),\n" +
+	"  or use --allow-unsigned at your own risk")

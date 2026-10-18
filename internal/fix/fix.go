@@ -498,7 +498,7 @@ func (p *Plan) Preview(w io.Writer, dryRun bool) {
 		}
 	}
 	for _, x := range p.Warnings {
-		fmt.Fprintf(w, "aviso: %s\n", x)
+		fmt.Fprintf(w, "warning: %s\n", x)
 	}
 }
 
